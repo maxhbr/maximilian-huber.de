@@ -18,20 +18,26 @@ data Nav = N { navTitle :: String  -- Title
              , subs :: [Nav]       -- SubNav
              }
 
-data Page = P { sPath :: [FilePath] -- urls/filenames
-              , sTitle :: String    -- title
-              , sStyle :: String    -- class
-              , sCtn :: Html        -- content
-              , sNav :: Nav         -- Navigation
-              , sLine :: Html       -- Second nav
+data Page = P { pPath :: [FilePath] -- urls/filenames
+              , pTitle :: String    -- title
+              , pStyle :: String    -- class
+              , pCtn :: Html        -- content
+              , pNav :: Nav         -- Navigation
+              , pLine :: Html       -- Second nav
               }
-defaultPage = P { sPath = []                    -- where to save
-                , sTitle = ""                   -- title of the page
-                , sStyle = "text"               -- style of the page
-                , sCtn = mempty                 -- content of the page
-                , sNav = N { navTitle = "home"  -- navigation information
+defaultPage = P { pPath = []                    -- where to save
+                , pTitle = ""                   -- title of the page
+                , pStyle = "text"               -- style of the page
+                , pCtn = mempty                 -- content of the page
+                , pNav = N { navTitle = "home"  -- navigation information
                           , navPath = "/"
                           , subs = [] 
                           }
-                , sLine = mempty                -- more overlays
+                , pLine = mempty                -- more overlays
                 }
+
+--------------------------------------------------------------------------------
+--  Helper
+
+if' True a _ = a
+if' False _ b = b

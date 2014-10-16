@@ -1,5 +1,7 @@
 --------------------------------------------------------------------------------
 import           System.FilePath.Posix ((</>))
+import           System.Directory
+import           Control.Monad
 
 import           Css
 import           Gallery
@@ -19,11 +21,19 @@ sc = SC { staticFolders = ["css","galerie","images"]
 --  Run
 makePage :: SiteCfg -> IO ()
 makePage sc = do
+  ex <- doesDirectoryExist (outPath sc)
+  unless ex (createDirectoryIfMissing True (outPath sc))
   -- copy static files:
   static sc
+  compileRaws sc ["gpg-pubkey.asc"]
   -- generate more css with clay:
   css sc
   -- read the gallery
-  genGallerieRoutine sc
+  rG <- genGal sc
 
-main = makePage sc
+  print "all done"
+
+main = do
+  curr <- getCurrentDirectory
+  makePage (sc { url = curr </> outPath sc
+               , outPath = curr </> outPath sc })

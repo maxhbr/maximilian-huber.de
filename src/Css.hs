@@ -224,9 +224,9 @@ css sc = do
   ex <- doesDirectoryExist (takeDirectory (cssFile sc))
   unless ex (createDirectoryIfMissing True (takeDirectory (cssFile sc)))
 #if 0
-  L.writeFile cssFile $ renderWith compact [] $ do
+  L.writeFile (outPath sc </> cssFile sc $ renderWith compact [] $ do
 #else
-  L.writeFile (cssFile sc) $ render $ do
+  L.writeFile (outPath sc </> cssFile sc) $ render $ do
 #endif
     general
     layout

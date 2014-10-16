@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Gallery
   ( Gallery (G)
-  , genGallerieRoutine
+  , genGal
   ) where
 import           Control.Monad
 import           Data.Typeable        (Typeable)
@@ -34,13 +34,6 @@ data Gallery = G { galPath :: FilePath
                  , galImgs :: [(Int, FilePath)] }
   deriving (Show, Typeable)
 
---getGP (G gp _ ) = gp
-
-{-
-data Menu = M { subMenu :: [Menu]
-              , menuTitle :: String }
- -}
-
 {- ============================================================================
  - read Gallery to list
  -}
@@ -68,50 +61,28 @@ readGal = liftM flattenFais (getCurrentDirectory >>= (`readGal'` "galerie"))
     flattenFais :: FoldrAndImgs -> [Gallery]
     flattenFais (FAI p fais is) = G p (zip [1..] is) : concatMap flattenFais fais
 
-{-genMenuLists :: [[]]-}
+galleryPage = defaultPage { pStyle = "maximize" }
 
-{- ============================================================================
- - Helper functions
- -}
-
-{-
-customZipper l = zip3 l1 l2 l3
-  where e  = (0,"")
-        l1 = e : (e : l)
-        l2 = e : l ++ [e]
-        l3 = l ++ [e,e]
- -}
-
-galleryPage = defaultPage { sStyle = "gallery" }
-
-genGallerieRoutine sc = do
-    ex <- doesDirectoryExist (outPath sc)
-    unless ex (createDirectoryIfMissing True (outPath sc))
-
+genGal :: SiteCfg -> IO [Gallery]
+genGal sc = do
     rG <- readGal
-    mapM_ customMkDir rG
-    mapM_ customMkFile rG
+    mapM_ genGalDirs rG
+    compilePages sc $ concatMap genGalPs rG
+    return rG
   where
-    customMkDir (G subdir _) = do
+    genGalDirs (G subdir _) = do
       ex <- doesDirectoryExist path
       unless ex (createDirectoryIfMissing True path)
         where path = outPath sc </> subdir
 
-    customMkFile (G subdir l) = customMkFile' subdir l
-    customMkFile' subdir (cimg:[]) =
-      customMkFile'' subdir cimg
-    customMkFile' subdir (cimg:is) = do
-      customMkFile'' subdir cimg
-      customMkFile' subdir is
-    customMkFile'' subdir (c,img) = do
-      when (c == 1)
-           (L.writeFile (outPath sc </> subdir </> "index.html") (genHTML img))
-      L.writeFile (outPath sc </> subdir </> (show c ++ ".html")) (genHTML img)
+    genGalPs (G subdir l) = map (genGalP subdir) l
+    genGalP subdir (c,img) = galleryPage { pPath = paths
+                                         , pTitle = show c
+                                         , pCtn = genHTML img}
+      where paths = if' (c/=1) [ subdir </> (show c ++ ".html") ]
+                              [ subdir </> (show c ++ ".html")
+                              , subdir </> "index.html" ]
 
-    customMkSite (G subdir l) = map (customMkSite' subdir) l
-    customMkSite' subdir (c,img) = galleryPage
-
-    genHTML img = renderHtml $
-      H.div ! A.id "super" $ do
-        H.img ! A.src (stringValue ("/" ++ img))
-        H.div ! A.id "imageOverlay" $ " "
+    genHTML img = H.div ! A.id "super" $ do
+      H.img ! A.src (stringValue (url sc </> img))
+      H.div ! A.id "imageOverlay" $ " "
