@@ -1,0 +1,45 @@
+/*@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);*/
+@font-face {font-family:"DejaVu Sans";
+    src:url("font/DejaVuSans.eot?") format("eot")
+    ,url("font/DejaVuSans.woff") format("woff")
+    ,url("font/DejaVuSans.ttf") format("truetype")
+    ,url("font/DejaVuSans.svg#DejaVuSans") format("svg");
+    font-weight:normal;
+    font-style:normal;
+}
+@font-face {font-family:"Decker";
+    src:url("font/Decker.eot?") format("eot")
+    ,url("font/Decker.woff") format("woff")
+    ,url("font/Decker.ttf") format("truetype")
+    ,url("font/Decker.svg#") format("svg");
+    font-weight:normal;
+    font-style:normal;
+}
+
+/* RESET */
+*, html, body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, label, fieldset, input, p, blockquote, th, td { margin:0; padding:0 }
+html { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+table { border-collapse:collapse; border-spacing:0 }
+fieldset, img { border:0 }
+address, caption, cite, code, dfn, em, strong, th, var { font-style:normal; font-weight:normal }
+ol, ul, li { list-style:none }
+caption, th { text-align:left }
+h1, h2, h3, h4, h5, h6 { font-size:100%; font-weight:lighter; }
+h1{ font-size: 3em; }
+h2{ font-size: 2em; }
+h3{ font-size: 1.4em; }
+q:before, q:after { content:''}
+a:focus { outline: thin dotted; }
+a:active, a:hover { outline: 0; }
+b, strong { font-weight:bold }
+em { font-style:italic }
+a img { border:none }
+[hidden] { display: none; }
+audio, canvas, video { display: inline-block; }
+article, aside, details, figcaption, figure, footer, header, hgroup, nav, section, summary { display: block; }
+
+
+body {
+    font-family: "Decker", "Helvetica", sans-serif;
+    font-size: 16px;
+}
