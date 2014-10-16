@@ -1,6 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
-module TemplateSystem (
-  makeSite
+module TemplateSystem
+  ( compilePage
+  , compilePages
   ) where
 
 import           Text.Blaze.Internal
@@ -11,11 +12,12 @@ import qualified Text.Blaze.Html5.Attributes as A
 import qualified Data.Text.Lazy.IO           as L
 import           System.FilePath.Posix
 import           System.Posix.Files
+import           Control.Monad
 
 import           Common
 
-makeSite :: SiteCfg -> Site -> IO()
-makeSite sc s = putToFile (sPath s)
+compilePage :: SiteCfg -> Page -> IO()
+compilePage sc s = putToFile (sPath s)
   where fullContent = renderHtml $ do
           theHead (sTitle s)
           body! A.class_ (stringValue (sStyle s)) $ do
@@ -25,27 +27,12 @@ makeSite sc s = putToFile (sPath s)
         putToFile []     = print "done"
         putToFile (f:fs) = L.writeFile (outPath sc </> f) fullContent
 
-{-templateCompiler :: String -- filePath-}
-                 {--> String -- Title of page-}
-                 {--> String -- Class of page-}
-                 {--> Html -- Content of page-}
-                 {--> Html -- Navigation-}
-                 {--> IO ()-}
-{-templateCompiler fp title cls ctn nav = L.writeFile (outPath </> fp) $-}
-  {-renderHtml $-}
-  {-applyTemplate title cls ctn nav-}
+compilePages :: SiteCfg -> [Page] -> IO()
+compilePages sc = mapM_ (compilePage sc)
 
-applyTemplate :: String -- Title of page
-              -> String -- Class of page
-              -> Html -- Content of page
-              -> Html -- Navigation
-              -> Html
-applyTemplate title cls ctn nav = do
-  theHead title
-  body! A.class_ (stringValue cls) $ do
-    -- Content:
-    ctn
-    theHeader nav
+{- ============================================================================
+ - Helper functions
+ -}
 
 theHead title = H.head $ do
   meta ! A.httpEquiv "Content-Type" ! A.content "text/html; charset=UTF-8"
@@ -95,8 +82,3 @@ genNavigation nav = ul ! A.id "navigation" $ do
       li $ a ! A.href "/gpg-pubkey.html" $ "GPG Key"
       li $ a ! A.href "/impress.html" $ "Impress"
     a ! A.href "/kontakt.html" $ "Kontakt"
-
--------------------------------------------------------------------------------
--- Tests
-testApplyTemplate = L.putStr $ renderHtml $
-  applyTemplate "Test" "text" (H.div $ "") (H.div $ "")

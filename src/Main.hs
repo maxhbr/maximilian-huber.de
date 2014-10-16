@@ -19,8 +19,11 @@ sc = SC { staticFolders = ["css","galerie","images"]
 --  Run
 makePage :: SiteCfg -> IO ()
 makePage sc = do
+  -- copy static files:
   static sc
+  -- generate more css with clay:
   css sc
-  genGalerieRoutine sc
+  -- read the gallery
+  genGallerieRoutine sc
 
 main = makePage sc

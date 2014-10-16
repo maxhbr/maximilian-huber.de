@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Gallery
   ( Gallery (G)
-  , genGalerieRoutine
+  , genGallerieRoutine
   ) where
 import           Control.Monad
 import           Data.Typeable        (Typeable)
@@ -21,6 +21,7 @@ import qualified Text.Blaze.Html5.Attributes as A
 import qualified Data.Text.Lazy.IO           as L
 
 import           Common
+import           TemplateSystem
 
 import           Debug.Trace (trace)
 
@@ -41,7 +42,7 @@ data Menu = M { subMenu :: [Menu]
  -}
 
 {- ============================================================================
- - Main function
+ - read Gallery to list
  -}
 
 readGal :: IO [Gallery]
@@ -81,18 +82,9 @@ customZipper l = zip3 l1 l2 l3
         l3 = l ++ [e,e]
  -}
 
-siteGalery = S { sPath = []
-               , sTitle = ""
-               , sStyle = "galery"
-               , sCtn = mempty
-               , sNav = N { navTitle = "home"
-                         , navPath = "/"
-                         , subs = []
-                         }
-               , sLine = mempty
-               }
+galleryPage = defaultPage { sStyle = "gallery" }
 
-genGalerieRoutine sc = do
+genGallerieRoutine sc = do
     ex <- doesDirectoryExist (outPath sc)
     unless ex (createDirectoryIfMissing True (outPath sc))
 
@@ -116,8 +108,8 @@ genGalerieRoutine sc = do
            (L.writeFile (outPath sc </> subdir </> "index.html") (genHTML img))
       L.writeFile (outPath sc </> subdir </> (show c ++ ".html")) (genHTML img)
 
-    customMkSite (G subdir l) = mapM (customMkSite' subdir) l
-    customMkSite' subdir (c,img) = undefined
+    customMkSite (G subdir l) = map (customMkSite' subdir) l
+    customMkSite' subdir (c,img) = galleryPage
 
     genHTML img = renderHtml $
       H.div ! A.id "super" $ do

@@ -18,14 +18,14 @@ data Nav = N { navTitle :: String  -- Title
              , subs :: [Nav]       -- SubNav
              }
 
-data Site = S { sPath :: [FilePath] -- urls/filenames
+data Page = P { sPath :: [FilePath] -- urls/filenames
               , sTitle :: String    -- title
               , sStyle :: String    -- class
               , sCtn :: Html        -- content
               , sNav :: Nav         -- Navigation
               , sLine :: Html       -- Second nav
               }
-siteDefault = S { sPath = []                    -- where to save
+defaultPage = P { sPath = []                    -- where to save
                 , sTitle = ""                   -- title of the page
                 , sStyle = "text"               -- style of the page
                 , sCtn = mempty                 -- content of the page
