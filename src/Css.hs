@@ -120,7 +120,7 @@ layout = do
     (ul # "#navigation" |> li)
       <> (div # "#spalteFill1")
       <> (div # "#spalteFill2")
-      <> (ul # ".galmenu" |> li)
+      <> (ul # ".MenuUlGalerie" |> li)
       <> (ul # ".submenu" |> li) ? do
         display block
         background bkColor
@@ -144,7 +144,7 @@ layout = do
         paddingBottom (px 10)
         background bkColor
       ul # ".submenu" ? width (px 150)
-      ul # "#galmenu" ? do
+      ul # "#MenuUlGalerie" ? do
         width (px 450)
         query M.screen [M.maxWidth (px 659)] (do
           width (px 300)
@@ -153,7 +153,7 @@ layout = do
           width (px 150)
           li ? a ?  fontWeight normal
         a ? width (px 120)
-      ul # "#galmenu" |> li ? float floatLeft
+      ul # "#MenuUlGalerie" |> li ? float floatLeft
     ul # "#navigation" |> li # hover ? do
       {-borderLeft solid (px 2) hiColor-}
       {-marginLeft (px (-2))-}

@@ -3,7 +3,7 @@ module Static (
   ) where
 
 {-import           System.Path   -}
-import           Control.Monad (liftM, filterM, forM_, mapM_)
+import           Control.Monad (liftM, filterM, forM_, mapM_,when)
 import           Control.Applicative
 import           System.Directory
 import           System.FilePath
@@ -15,7 +15,10 @@ static :: SiteCfg -> IO ()
 static (SC sf _ op _) = static' op sf
   where static' op []     = print "static files done"
         static' op (d:ds) = do
-          copyDir d (op </> d)
+          fex <- doesFileExist d
+          when fex $ copyFile d (op </> d)
+          dex <- doesDirectoryExist d
+          when dex $ copyDir d (op </> d)
           static' op ds
 
 -------------------------------------------------------------------------------

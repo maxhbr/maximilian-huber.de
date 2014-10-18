@@ -11,7 +11,7 @@ import           TemplateSystem
 
 --------------------------------------------------------------------------------
 --  Global config
-sc = SC { staticFolders = ["css","galerie","images"]
+sc = SC { staticFolders = ["css","galerie","images","gpg-pubkey.asc"]
         , url           = "maximilian-huber.de"
         , outPath       = "_site"
         , cssFile       = "css" </> "default.css"
@@ -25,7 +25,7 @@ makePage sc = do
   unless ex (createDirectoryIfMissing True (outPath sc))
   -- copy static files:
   static sc
-  compileRaws sc ["gpg-pubkey.asc"]
+  compileRaws sc ["gpg-pubkey.asc", "impress.html"]
   -- generate more css with clay:
   css sc
   -- read the gallery

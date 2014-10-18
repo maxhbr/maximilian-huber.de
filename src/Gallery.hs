@@ -77,7 +77,7 @@ genGal sc = do
 
     genGalPs (G subdir l) = map (genGalP subdir) l
     genGalP subdir (c,img) = galleryPage { pPath = paths
-                                         , pTitle = show c
+                                         , pTitle = Just (show c)
                                          , pCtn = genHTML img}
       where paths = if' (c/=1) [ subdir </> (show c ++ ".html") ]
                               [ subdir </> (show c ++ ".html")
