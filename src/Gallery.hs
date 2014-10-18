@@ -3,6 +3,7 @@
 module Gallery
   ( Gallery (G)
   , genGal
+  , readGalDirs
   ) where
 import           Control.Monad
 import           Data.Typeable        (Typeable)
@@ -37,6 +38,9 @@ data Gallery = G { galPath :: FilePath
 {- ============================================================================
  - read Gallery to list
  -}
+
+readGalDirs :: IO [Nav]
+readGalDirs = return []
 
 readGal :: IO [Gallery]
 readGal = liftM flattenFais (getCurrentDirectory >>= (`readGal'` "galerie"))
