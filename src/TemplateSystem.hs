@@ -128,7 +128,16 @@ keyMove = script ! A.type_ "text/javascript" $
       ,       "window.location.hash = '';"
       ,       "break;"
       ,   "}"
-      , "});" ]
+      , "});"
+      , "function placement(){"
+      ,   "var img = $('#super > img');"
+      ,   "$(img).css({ maxWidth: $(window).width() });"
+      ,   "$(img).css({ maxHeight: $(window).height() });"
+      , "}"
+      , "$(document).ready(function(){ placement(); });"
+      , "$(window).resize(function() { placement(); });"
+      ]
+
 analytics :: Html
 analytics = (script ! A.type_ "text/javascript") . H.preEscapedToHtml . T.concat $
   [ "var _gaq = _gaq || [];"

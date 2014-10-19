@@ -214,7 +214,7 @@ maximize sc = do
   div # "#header" # hover ? div # "#spalte" ? toVisible
   (div # "#super") <> (div # "#imageOverlay") ? do
     position absolute
-    top 0
+    top (px 30)
     right 0
     bottom 0
     left 0
