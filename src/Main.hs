@@ -3,6 +3,7 @@ import           System.FilePath.Posix ((</>))
 import           System.Directory
 import           Control.Monad
 import           Data.Monoid
+import           Data.Maybe
 
 import           Css
 import           Gallery
@@ -40,7 +41,8 @@ scPre galNav = SC { statics = ["css","galerie","images"
                                       , pStyle = "text"
                                       , pCtn   = mempty
                                       , pNav   = genDefaultNav galNav
-                                      , pLine  = Nothing}}
+                                      , pLine  = Nothing}
+                  , indexP        = Just "galerie/index.html"}
 
 --------------------------------------------------------------------------------
 --  Run
@@ -61,6 +63,12 @@ makePage scPre = do
     css sc
     -- read the gallery:
     genGal sc fai
+
+    when (isJust (indexP sc)) ( do
+      ex <- doesFileExist (outPath sc </> fromJust (indexP sc))
+      when ex $
+        copyFile (outPath sc </> fromJust (indexP sc)) 
+                 (outPath sc </> "index.html"))
   where makePagePre sc = do
           ex <- doesDirectoryExist (outPath sc)
           when ex (do

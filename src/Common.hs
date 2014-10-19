@@ -25,6 +25,7 @@ data SiteCfg = SC { statics :: [FilePath] -- static fieles
                   , outPath :: FilePath
                   , cssFile :: FilePath
                   , defaultP :: Page
+                  , indexP :: Maybe FilePath
                   }
 
 --------------------------------------------------------------------------------
