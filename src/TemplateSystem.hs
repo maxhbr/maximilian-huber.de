@@ -96,11 +96,9 @@ compileRaw sc f = do
   ex <- doesFileExist f
   when ex ( do
     c <- readFile f
-    compilePage sc $ (defaultP sc) { pPath = [replaceExtension f ".html"]
+    compilePage sc $ (defaultP sc) { pPath  = [replaceExtension f ".html"]
                                    , pTitle = Just $ snd (splitFileName f)
-                                   , pCtn = H.div ! A.id "super" $
-                                       H.div ! A.id "content" $
-                                         toHtml c } )
+                                   , pCtn   = toHtml c } )
 
 
 -- genNavigation' sc s = ul ! A.id "navigation" $ do

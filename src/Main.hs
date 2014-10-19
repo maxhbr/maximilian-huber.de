@@ -16,9 +16,7 @@ import           Pages
 genDefaultNav galNav = N { navTitle = "Home"
                          , navPath  = Just ""
                          , subs     =
-                           [ N { navTitle = "Galerie"
-                               , navPath  = Just "galerie"
-                               , subs     = galNav}
+                           [ galNav
                            , N { navTitle = "Webdesign"
                                , navPath  = Just "webdesign.html"
                                , subs     = []}
@@ -44,30 +42,30 @@ scPre galNav = SC { staticFolders = ["css","galerie","images","gpg-pubkey.asc"]
 
 --------------------------------------------------------------------------------
 --  Run
-makePage :: ([Nav] -> SiteCfg) -> IO ()
+makePage :: (Nav -> SiteCfg) -> IO ()
 makePage scPre = do
-    makePagePre
     -- read gallery to data structure:
     fai <- readGal
 
     let sc = scPre (faiToNav fai)
+    makePagePre sc
     -- copy static files:
     static sc
     -- compile Raw files:
     compileRaws sc ["gpg-pubkey.asc"]
     -- compile blaze-html pages
-    compilePages sc [(webdesign sc),(impress sc)]
+    compilePages sc [webdesign sc,impress sc]
     -- generate more css with clay:
     css sc
     -- read the gallery:
     genGal sc fai
-  where makePagePre = do
-          ex <- doesDirectoryExist (outPath (scPre []))
+  where makePagePre sc = do
+          ex <- doesDirectoryExist (outPath sc)
           when ex (do
-            ex <- doesDirectoryExist (outPath (scPre []) ++ "-old")
-            when ex (removeDirectoryRecursive (outPath (scPre []) ++ "-old"))
-            renameDirectory (outPath (scPre [])) (outPath (scPre []) ++ "-old"))
-          unless ex (createDirectoryIfMissing True (outPath (scPre [])))
+            ex <- doesDirectoryExist (outPath sc ++ "-old")
+            when ex (removeDirectoryRecursive (outPath sc ++ "-old"))
+            renameDirectory (outPath sc) (outPath sc ++ "-old"))
+          unless ex (createDirectoryIfMissing True (outPath sc))
 
 main = do
   curr <- getCurrentDirectory

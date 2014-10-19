@@ -60,14 +60,12 @@ readGal = getCurrentDirectory >>= (`readGal'` "galerie")
         let allImgs = getAllSubImgs fais ++ map (curdir </>) [i | i <- imgs , "jpg" `isInfixOf` i]
         return $ FAI curdir fais (sortBy (flip compare) allImgs)
 
-faiToNav :: FoldrAndImgs -> [Nav]
-faiToNav fai = subs (faiToNav' fai)
-  where faiToNav' :: FoldrAndImgs -> Nav
-        faiToNav' fai = N { navTitle = normalize (takeFileName (faiPath fai))
-                          , navPath  = Just $ faiPath fai </> "index.html"
-                          , subs     = map faiToNav' (subFais fai)}
-          where normalize ""    = ""
-                normalize (h:t) = toUpper h : t
+faiToNav :: FoldrAndImgs -> Nav
+faiToNav fai = N { navTitle = normalize (takeFileName (faiPath fai))
+                  , navPath  = Just $ faiPath fai </> "index.html"
+                  , subs     = map faiToNav (subFais fai)}
+  where normalize ""    = ""
+        normalize (h:t) = toUpper h : t
 
 genGal :: SiteCfg -> FoldrAndImgs -> IO ()
 genGal sc fai = do
