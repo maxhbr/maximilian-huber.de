@@ -12,7 +12,7 @@ import           Data.List ((\\))
 import           Common
 
 static :: SiteCfg -> IO ()
-static (SC sf _ op _) = static' op sf
+static (SC sf _ op _ _) = static' op sf
   where static' op []     = print "static files done"
         static' op (d:ds) = do
           fex <- doesFileExist d

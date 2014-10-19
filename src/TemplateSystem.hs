@@ -18,15 +18,17 @@ import           Data.Maybe
 
 import           Common
 
-import           Debug.Trace (trace)
-
 compilePage :: SiteCfg -> Page -> IO()
 compilePage sc s = mapM_ putToFile (pPath s)
   where fullContent = renderHtml $ do
           theHead sc s
           body! A.class_ (stringValue (pStyle s)) $ do
             -- Content:
-            pCtn s
+            -- 
+            H.div ! A.id "super" $
+              if pStyle s == "text"
+                then H.div ! A.id "content" $ pCtn s
+                else pCtn s
             theHeader sc s
         putToFile f = L.writeFile (outPath sc </> f) fullContent
 
@@ -66,11 +68,6 @@ genNavigation sc s = ul ! A.class_ "MenuUl0"
              ! A.class_ 
                (if' ( isJust (navPath nav)
                     && fromJust (navPath nav) `elem` pPath s) "active" "") $ do
-            unless (Prelude.null (subs nav)) 
-                   (H.div ! A.class_ "infinitem" $
-                      ul ! A.class_ "submenu" 
-                         ! A.id (stringValue $ "MenuUl" ++ navTitle nav) $
-                           forM_ (subs nav) (`genNavigation''` (lvl + 1)))
             case navPath nav of
               Nothing ->
                 H.span ! A.id (stringValue $ "MenuSpan" ++ navTitle nav)$
@@ -82,6 +79,11 @@ genNavigation sc s = ul ! A.class_ "MenuUl0"
                   ! A.href (stringValue $ url sc </> path) $
                     toHtml $
                       navTitle nav
+            unless (Prelude.null (subs nav)) 
+                   (H.div ! A.class_ (stringValue $ "infinitem" ++ show lvl) $
+                      ul ! A.class_ (stringValue $ "submenu" ++ show lvl)
+                         ! A.id (stringValue $ "MenuUl" ++ navTitle nav) $
+                           forM_ (subs nav) (`genNavigation''` (lvl + 1)))
 
 compilePages :: SiteCfg -> [Page] -> IO()
 compilePages sc = mapM_ (compilePage sc)
@@ -94,11 +96,11 @@ compileRaw sc f = do
   ex <- doesFileExist f
   when ex ( do
     c <- readFile f
-    compilePage sc $ defaultPage { pPath = [replaceExtension f ".html"]
-                                 , pTitle = Just $ snd (splitFileName f)
-                                 , pCtn = H.div ! A.id "super"$
-                                    H.div ! A.id "content" $
-                                      toHtml c } )
+    compilePage sc $ (defaultP sc) { pPath = [replaceExtension f ".html"]
+                                   , pTitle = Just $ snd (splitFileName f)
+                                   , pCtn = H.div ! A.id "super" $
+                                       H.div ! A.id "content" $
+                                         toHtml c } )
 
 
 -- genNavigation' sc s = ul ! A.id "navigation" $ do

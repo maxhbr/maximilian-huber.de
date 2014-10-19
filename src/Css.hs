@@ -19,19 +19,19 @@ import           Common
 
 cWidth = 960
 
-bkColor = "#333" :: Color
+bkColor  = "#333"    :: Color
 bkColor0 = bkColor
-bkColor1 = "#444" :: Color
-bkColor2 = "#555" :: Color
-fgColor = "#bbb" :: Color
-hiColor = "#f8d687" :: Color
-hoColor = "#fff" ::Color
+bkColor1 = "#444"    :: Color
+bkColor2 = "#555"    :: Color
+fgColor  = "#bbb"    :: Color
+hiColor  = "#f8d687" :: Color
+hoColor  = "#fff"    :: Color
 
 toInvisible = do
   visibility hidden
   opacity 0
-  transitions [("visibility",T.sec 0,linear,T.sec 0.2)
-              ,("opacity",T.sec 0.2,linear,T.sec 0.0)]
+  transitions [("visibility",T.sec 0,  linear,T.sec 0.2)
+              ,("opacity",   T.sec 0.2,linear,T.sec 0.0)]
 toVisible = do
   visibility visible
   opacity 1
@@ -54,7 +54,7 @@ general = do
     "text-align" -: "right"
     position relative
     top (px 15)
-  div # ".infinitem" ? do
+  div # ".infinitem0" ? do
     display block
     width (px 0)
     height (px 0)
@@ -121,7 +121,7 @@ layout = do
       <> (div # "#spalteFill1")
       <> (div # "#spalteFill2")
       <> (ul # ".MenuUlGalerie" |> li)
-      <> (ul # ".submenu" |> li) ? do
+      <> (ul # ".submenu0" |> li) ? do
         display block
         background bkColor
     ul # "#navigation" ? li ? do
@@ -130,12 +130,12 @@ layout = do
       lineHeight (px 30)
     ul # "#navigation" |> li ? do
       height (px 30)
-      a ? do
+      a <> Clay.span ? do
         display block
         width (px 170)
         height (other "100%")
         padding 0 0 0 (px 30)
-      ul # ".submenu" ? do
+      ul # ".submenu0" ? do
         toInvisible
         position absolute
         left (px 205)
@@ -143,7 +143,7 @@ layout = do
         paddingTop (px 10)
         paddingBottom (px 10)
         background bkColor
-      ul # ".submenu" ? width (px 150)
+      ul # ".submenu0" ? width (px 150)
       ul # "#MenuUlGalerie" ? do
         width (px 450)
         query M.screen [M.maxWidth (px 659)] (do

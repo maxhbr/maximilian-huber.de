@@ -1,14 +1,15 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Gallery
-  ( Gallery (G)
-  , genGal
-  , readGalDirs
+  ( Gallery (G), FoldrAndImgs
+  , readGal
+  , genGal, faiToNav
   ) where
 import           Control.Monad
 import           Data.Typeable        (Typeable)
 import           Data.List
 import           Data.Monoid
+import           Data.Char
 import           System.Directory
 import           System.FilePath
 import           System.FilePath.Posix
@@ -39,11 +40,8 @@ data Gallery = G { galPath :: FilePath
  - read Gallery to list
  -}
 
-readGalDirs :: IO [Nav]
-readGalDirs = return []
-
-readGal :: IO [Gallery]
-readGal = liftM flattenFais (getCurrentDirectory >>= (`readGal'` "galerie"))
+readGal :: IO FoldrAndImgs
+readGal = getCurrentDirectory >>= (`readGal'` "galerie")
   where
     readGal' :: FilePath -> FilePath -> IO FoldrAndImgs
     readGal' topdir curdir = let
@@ -62,19 +60,26 @@ readGal = liftM flattenFais (getCurrentDirectory >>= (`readGal'` "galerie"))
         let allImgs = getAllSubImgs fais ++ map (curdir </>) [i | i <- imgs , "jpg" `isInfixOf` i]
         return $ FAI curdir fais (sortBy (flip compare) allImgs)
 
-    flattenFais :: FoldrAndImgs -> [Gallery]
-    flattenFais (FAI p fais is) = G p (zip [1..] is) : concatMap flattenFais fais
+faiToNav :: FoldrAndImgs -> [Nav]
+faiToNav fai = subs (faiToNav' fai)
+  where faiToNav' :: FoldrAndImgs -> Nav
+        faiToNav' fai = N { navTitle = normalize (takeFileName (faiPath fai))
+                          , navPath  = Just $ faiPath fai </> "index.html"
+                          , subs     = map faiToNav' (subFais fai)}
+          where normalize ""    = ""
+                normalize (h:t) = toUpper h : t
 
-
-genGal :: SiteCfg -> IO [Gallery]
-genGal sc = do
-    rG <- readGal
+genGal :: SiteCfg -> FoldrAndImgs -> IO ()
+genGal sc fai = do
+    let rG = flattenFais fai
     mapM_ genGalDirs rG
     compilePages sc $ concatMap genGalPs rG
     print "gallery done"
-    return rG
   where
-    galleryPage = defaultPage { pStyle = "maximize" }
+    flattenFais :: FoldrAndImgs -> [Gallery]
+    flattenFais (FAI p fais is) = G p (zip [1..] is) : concatMap flattenFais fais
+
+    galleryPage = (defaultP sc) { pStyle = "maximize" }
 
     genGalDirs (G subdir _) = do
       ex <- doesDirectoryExist path
@@ -89,6 +94,6 @@ genGal sc = do
                               [ subdir </> (show c ++ ".html")
                               , subdir </> "index.html" ]
 
-    genHTML img = H.div ! A.id "super" $ do
+    genHTML img = do
       H.img ! A.src (stringValue (url sc </> img))
       H.div ! A.id "imageOverlay" $ " "
