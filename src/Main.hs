@@ -63,7 +63,7 @@ makePage scPre = do
     css sc
     -- read the gallery:
     genGal sc fai
-
+    -- copy to main index file:
     when (isJust (indexP sc)) ( do
       ex <- doesFileExist (outPath sc </> fromJust (indexP sc))
       when ex $
