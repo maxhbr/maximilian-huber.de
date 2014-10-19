@@ -40,6 +40,9 @@ data Gallery = G { galPath :: FilePath
  - read Gallery to list
  -}
 
+imageSort :: FilePath -> FilePath -> Ordering
+imageSort i1 i2 = compare (takeFileName i2) (takeFileName i1)
+
 readGal :: IO FoldrAndImgs
 readGal = getCurrentDirectory >>= (`readGal'` "galerie")
   where
@@ -58,7 +61,7 @@ readGal = getCurrentDirectory >>= (`readGal'` "galerie")
           >>= mapM (\d -> readGal' topdir (curdir </> d))
         imgs <- filterFiles allfiles
         let allImgs = getAllSubImgs fais ++ map (curdir </>) [i | i <- imgs , "jpg" `isInfixOf` i]
-        return $ FAI curdir fais (sortBy (flip compare) allImgs)
+        return $ FAI curdir fais (sortBy imageSort allImgs)
 
 faiToNav :: FoldrAndImgs -> Nav
 faiToNav fai = N { navTitle = normalize (takeFileName (faiPath fai))

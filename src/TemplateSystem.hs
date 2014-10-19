@@ -16,6 +16,8 @@ import           System.Directory
 import           Control.Monad
 import           Data.Maybe
 import           Data.Monoid
+import qualified Data.Text as T
+import qualified Data.Foldable as F
 
 import           Common
 
@@ -30,6 +32,11 @@ compilePage sc s = mapM_ putToFile (pPath s)
                 then H.div ! A.id "content" $ pCtn s
                 else                          pCtn s
             theHeader sc s
+            script ! A.type_ "text/javascript"
+                   ! A.src "http://code.jquery.com/jquery-latest.js" $ " "
+            stopRightClicks
+            when (pStyle s == "maximize") keyMove
+            analytics
         putToFile f = L.writeFile (outPath sc </> f) fullContent
 
 theHead sc s = H.head $ do
@@ -58,10 +65,7 @@ theHeader sc s = H.div ! A.id "header" $ do
     -- Navigation:
     genNavigation sc s
     H.div ! A.id "spalteFill2" $ ""
-  when (isJust (pLine s)) (
-    H.div ! A.id "reihe" $
-      fromJust $
-        pLine s)
+  F.forM_ (pLine s) (H.div ! A.id "reihe")
   -- Data.Foldable.forM_ (pLine s) (H.div ! A.id "reihe")
 
 genNavigation sc s = ul ! A.class_ "MenuUl0"
@@ -90,6 +94,51 @@ genNavigation sc s = ul ! A.class_ "MenuUl0"
                       ul ! A.class_ (stringValue $ "submenu" ++ show lvl)
                          ! A.id (stringValue $ "MenuUl" ++ navTitle nav) $
                            forM_ (subs nav) (`genNavigation''` (lvl + 1)))
+
+stopRightClicks :: Html
+stopRightClicks = script ! A.type_ "text/javascript" $
+  H.preEscapedToHtml $
+    T.concat [ "$(document).ready(function(){"
+             ,     "$(document).bind(\"contextmenu\",function(e){"
+             ,         "return false;"
+             ,     "});"
+             , "});" ]
+keyMove :: Html
+keyMove = script ! A.type_ "text/javascript" $
+  H.preEscapedToHtml $
+    T.concat
+      [ "$(window).keydown(function(event){"
+      ,   "switch (event.keyCode) {"
+      ,     "case 32:"
+      ,     "case 39:"
+      ,       "if($('#toright').length != 0)"
+      ,         "window.location.href = $('#toright').attr('href');"
+      ,       "break;"
+      ,     "case 37:"
+      ,       "if($('#toleft').length != 0)"
+      ,         "window.location.href = $('#toleft').attr('href');"
+      ,       "break;"
+      ,     "case 80:"
+      ,       "if($('#toright').length != 0){"
+      ,         "autoPlay(3);"
+      ,         "window.location.hash = '#play';"
+      ,       "}"
+      ,       "break;"
+      ,     "case 83:"
+      ,       "window.location.hash = '';"
+      ,       "break;"
+      ,   "}"
+      , "});" ]
+analytics :: Html
+analytics = (script ! A.type_ "text/javascript") . H.preEscapedToHtml . T.concat $
+  [ "var _gaq = _gaq || [];"
+  , "_gaq.push(['_setAccount', 'UA-21543191-1']);"
+  , "_gaq.push(['_trackPageview']);"
+  , "(function() {"
+  ,   "var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;"
+  ,   "ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';"
+  ,   "var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);"
+  , "})();" ]
 
 compilePages :: SiteCfg -> [Page] -> IO()
 compilePages sc = mapM_ (compilePage sc)

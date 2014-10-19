@@ -32,7 +32,7 @@ genDefaultNav galNav = N { navTitle = "Home"
 scPre galNav = SC { statics = ["css","galerie","images"
                               ,"gpg-pubkey.asc","favicon.ico"
                               ,"qr.jpg","qr_large.jpg"]
-                  , url           = "maximilian-huber.de"
+                  , url           = "http://maximilian-huber.de/develop/3"
                   , outPath       = "_site"
                   , cssFile       = "css" </> "default.css"
                   , defaultP      = P { pPath  = []
@@ -73,3 +73,4 @@ main = do
   curr <- getCurrentDirectory
   makePage (\x -> (scPre x) { url     = curr </> outPath (scPre x)
                            , outPath = curr </> outPath (scPre x) })
+  -- makePage (\x -> (scPre x) { outPath = curr </> outPath (scPre x) })
