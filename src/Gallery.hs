@@ -65,15 +65,17 @@ readGal = liftM flattenFais (getCurrentDirectory >>= (`readGal'` "galerie"))
     flattenFais :: FoldrAndImgs -> [Gallery]
     flattenFais (FAI p fais is) = G p (zip [1..] is) : concatMap flattenFais fais
 
-galleryPage = defaultPage { pStyle = "maximize" }
 
 genGal :: SiteCfg -> IO [Gallery]
 genGal sc = do
     rG <- readGal
     mapM_ genGalDirs rG
     compilePages sc $ concatMap genGalPs rG
+    print "gallery done"
     return rG
   where
+    galleryPage = defaultPage { pStyle = "maximize" }
+
     genGalDirs (G subdir _) = do
       ex <- doesDirectoryExist path
       unless ex (createDirectoryIfMissing True path)
