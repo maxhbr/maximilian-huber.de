@@ -38,12 +38,15 @@ theHead sc s = H.head $ do
     Nothing -> H.title "Maximilian-Huber.de"
     Just title ->
       H.title (toHtml $ "Maximilian-Huber.de | " ++ title)
+  link ! A.rel "shortcut icon"
+       ! A.type_ "image/x-icon"
+       ! A.href (stringValue $ url sc </> "favicon.ico")
   link ! A.rel "stylesheet"
        ! A.type_ "text/css"
-       ! A.href (stringValue $( url sc </> "css/reset.css"))
+       ! A.href (stringValue $ url sc </> "css/reset.css")
   link ! A.rel "stylesheet"
        ! A.type_ "text/css"
-       ! A.href (stringValue $( url sc </> "css/default.css"))
+       ! A.href (stringValue $ url sc </> "css/default.css")
 
 theHeader sc s = H.div ! A.id "header" $ do
   H.div ! A.id "logoWrapper" $

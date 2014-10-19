@@ -200,6 +200,8 @@ textCss = div # "#super" ? do
     query M.screen [M.maxWidth (px 969)] (right (px 0))
     query M.screen [M.minWidth (px 969)] (width (px 596))
     li ? listStyleType disc
+    div # ".center" ? do
+      "text-align" -: "center"
 
 maximize :: Css
 maximize = do
