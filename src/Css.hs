@@ -1,13 +1,15 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE CPP #-}
-module Css ( css) where
+module Css (css) where
 
 import           Prelude hiding (div,(**))
 import qualified Prelude as P
 import           Data.Monoid
 import qualified Data.Text.Lazy    as L
 import qualified Data.Text.Lazy.IO as L
-import           Clay
+import           Data.Text
+import           Clay hiding (url)
+import qualified Clay as C
 import qualified Clay.Media as M
 import qualified Clay.Time as T
 import           Control.Monad
@@ -63,7 +65,7 @@ layout :: Css
 layout = do
   -- ########################################################################
   div # "#header" ? do
-    position absolute
+    position fixed
     left 0
     top 0
     right 0
@@ -178,6 +180,9 @@ layout = do
       marginLeft (px (- cWidth `P.div` 2 + 200)))
     query M.screen [M.minHeight (px 450)] (position fixed)
     display none
+    li ? do 
+      float floatLeft
+      marginRight (px 5)
     -- "border-bottom-right-radius" -: "15px"
 
 textCss :: Css
@@ -200,26 +205,59 @@ textCss = div # "#super" ? do
     query M.screen [M.maxWidth (px 969)] (right (px 0))
     query M.screen [M.minWidth (px 969)] (width (px 596))
     li ? listStyleType disc
-    div # ".center" ? do
-      "text-align" -: "center"
+    div # ".center" ? ("text-align" -: "center")
 
-maximize :: Css
-maximize = do
+maximize :: SiteCfg -> Css
+maximize sc = do
   div # "#reihe" ? display block
+  div # "#spalte" ? toInvisible
+  div # "#header" # hover ? div # "#spalte" ? toVisible
   (div # "#super") <> (div # "#imageOverlay") ? do
     position absolute
     top 0
     right 0
     bottom 0
     left 0
+  div # "#imageOverlay" ? position fixed
   div # "#super" |> img ? do
     maxHeight (other "100%")
     maxWidth (other "100%")
     marginLeft auto
     marginRight auto
     display (other "table")
-  div # "#spalte" ? toInvisible
-  div # "#header" # hover ?  div # "#spalte" ? toVisible
+  a # "#toleft" <> a # "#toright" ? do
+    position absolute
+    display block
+    top 0
+    bottom 0
+    div # ".inner" ? do
+      position absolute
+      right 0
+      top 0
+      bottom 0
+      width (px 100)
+      transitions [("opacity",T.sec 0.25,easeOut,T.sec 0.0)]
+      opacity 0.3
+    div # ".inner" # hover ?
+      opacity 1
+  a # "#toleft" ? do
+    left 0
+    width (px 100)
+    div # ".inner" ? do
+      backgroundImage (C.url (pack $ url sc </> "images/2arrow-l.png"))
+      backgroundRepeat noRepeat
+      backgroundPosition (placed sideLeft sideCenter)
+    div # ".inner" # hover ?
+      backgroundImage (C.url (pack $ url sc </> "images/2arrow-l-active.png"))
+  a # "#toright" ? do
+    left (px 100)
+    right 0
+    div # ".inner" ? do
+      backgroundImage (C.url (pack $ url sc </> "images/2arrow-r.png"))
+      backgroundRepeat noRepeat
+      backgroundPosition (placed sideRight sideCenter)
+    div # ".inner" # hover ?
+      backgroundImage (C.url (pack $ url sc </> "images/2arrow-r-active.png"))
 
 css :: SiteCfg -> IO ()
 css sc = do
@@ -233,5 +271,5 @@ css sc = do
     general
     layout
     body # ".text" ? textCss
-    body # ".maximize" ? maximize
+    body # ".maximize" ? maximize sc
   print "css done"

@@ -7,17 +7,17 @@ import           Data.Monoid
 --------------------------------------------------------------------------------
 --  Data definitions
 
-data Nav = N { navTitle :: String  -- Title
-             , navPath :: Maybe FilePath -- Adress
-             , subs :: [Nav]       -- SubNav
+data Nav = N { navTitle :: String         -- Title
+             , navPath :: Maybe FilePath  -- Adress
+             , subs :: [Nav]              -- SubNav
              }
 
-data Page = P { pPath :: [FilePath] -- urls/filenames
+data Page = P { pPath :: [FilePath]       -- urls/filenames
               , pTitle :: Maybe String    -- title
-              , pStyle :: String    -- class
-              , pCtn :: Html        -- content
-              , pNav :: Nav         -- Navigation
-              , pLine :: Html       -- Second nav
+              , pStyle :: String          -- class
+              , pCtn :: Html              -- content
+              , pNav :: Nav               -- Navigation
+              , pLine :: Maybe Html       -- Second nav
               }
 
 data SiteCfg = SC { statics :: [FilePath] -- static fieles

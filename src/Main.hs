@@ -40,7 +40,7 @@ scPre galNav = SC { statics = ["css","galerie","images"
                                       , pStyle = "text"
                                       , pCtn   = mempty
                                       , pNav   = genDefaultNav galNav
-                                      , pLine  = mempty}}
+                                      , pLine  = Nothing}}
 
 --------------------------------------------------------------------------------
 --  Run

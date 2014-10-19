@@ -84,14 +84,46 @@ genGal sc fai = do
       unless ex (createDirectoryIfMissing True path)
         where path = outPath sc </> subdir
 
-    genGalPs (G subdir l) = map (genGalP subdir) l
-    genGalP subdir (c,img) = galleryPage { pPath = paths
-                                         , pTitle = Just (show c)
-                                         , pCtn = genHTML img}
+    genGalPs :: Gallery -> [Page]
+    genGalPs (G subdir l) = map (genGalP subdir (length l)) l
+    genGalP :: FilePath -> Int -> (Int, FilePath) -> Page
+    genGalP subdir num (c,img) = galleryPage { pPath  = paths
+                                             , pTitle = Just (show c)
+                                             , pCtn   = genHTML img
+                                             , pLine  = Just line }
       where paths = if' (c/=1) [ subdir </> (show c ++ ".html") ]
                               [ subdir </> (show c ++ ".html")
                               , subdir </> "index.html" ]
 
-    genHTML img = do
-      H.img ! A.src (stringValue (url sc </> img))
-      H.div ! A.id "imageOverlay" $ " "
+            prevPage = stringValue $
+              url sc </> subdir </> (show (c-1) ++ ".html")
+            nextPage = stringValue $
+              url sc </> subdir </> (show (c+1) ++ ".html")
+
+            line :: Html
+            line = ul $ do
+              li "Bild "
+              when (c > 1) (li $
+                a ! A.href prevPage $ "<")
+              li $ toHtml $ show c
+              li " von "
+              li $ toHtml $ show num
+              when (c < num) (li $
+                a ! A.href nextPage $ ">")
+              li " in "
+              li $ toHtml subdir
+
+            genHTML img = do
+              H.img ! A.src (stringValue (url sc </> img))
+              H.div ! A.id "imageOverlay" $ do 
+                when (c > 1) ( a ! A.href prevPage
+                                 ! A.id "toleft" $
+                  H.div $
+                    H.div ! A.class_ "inner" $
+                       " ")
+                when (c < num) ( a ! A.href nextPage
+                                   ! A.id "toright" $
+                  H.div $
+                    H.div ! A.class_ "inner" $
+                      " ")
+

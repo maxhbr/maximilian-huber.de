@@ -15,6 +15,7 @@ import           System.Posix.Files
 import           System.Directory
 import           Control.Monad
 import           Data.Maybe
+import           Data.Monoid
 
 import           Common
 
@@ -24,7 +25,6 @@ compilePage sc s = mapM_ putToFile (pPath s)
           theHead sc s
           body! A.class_ (stringValue (pStyle s)) $ do
             -- Content:
-            --
             H.div ! A.id "super" $
               if pStyle s == "text"
                 then H.div ! A.id "content" $ pCtn s
@@ -35,9 +35,8 @@ compilePage sc s = mapM_ putToFile (pPath s)
 theHead sc s = H.head $ do
   meta ! A.httpEquiv "Content-Type" ! A.content "text/html; charset=UTF-8"
   case pTitle s of
-    Nothing -> H.title "Maximilian-Huber.de"
-    Just title ->
-      H.title (toHtml $ "Maximilian-Huber.de | " ++ title)
+    Nothing    -> H.title "Maximilian-Huber.de"
+    Just title -> H.title (toHtml $ "Maximilian-Huber.de | " ++ title)
   link ! A.rel "shortcut icon"
        ! A.type_ "image/x-icon"
        ! A.href (stringValue $ url sc </> "favicon.ico")
@@ -59,6 +58,11 @@ theHeader sc s = H.div ! A.id "header" $ do
     -- Navigation:
     genNavigation sc s
     H.div ! A.id "spalteFill2" $ ""
+  when (isJust (pLine s)) (
+    H.div ! A.id "reihe" $
+      fromJust $
+        pLine s)
+  -- Data.Foldable.forM_ (pLine s) (H.div ! A.id "reihe")
 
 genNavigation sc s = ul ! A.class_ "MenuUl0"
                         ! A.id "navigation" $

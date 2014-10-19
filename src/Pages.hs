@@ -43,6 +43,8 @@ impress sc = (defaultP sc) { pPath  = ["impress.html"]
           H.span "Email: hubi135 (at) live (punkt) de"
           H.br
           H.br
+          H.br
+          H.br
           H.div ! A.class_ "center" $ do
             a ! A.rel "license"
               ! A.href "http://creativecommons.org/licenses/by-nc-nd/4.0/" $
