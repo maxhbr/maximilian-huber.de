@@ -29,7 +29,9 @@ genDefaultNav galNav = N { navTitle = "Home"
                                  , N { navTitle = "Impress"
                                      , navPath  = Just "impress.html"
                                      , subs     = []}]}]}
-scPre galNav = SC { staticFolders = ["css","galerie","images","gpg-pubkey.asc"]
+scPre galNav = SC { statics = ["css","galerie","images"
+                              ,"gpg-pubkey.asc","favicon.ico"
+                              ,"qr.jpg","qr_large.jpg"]
                   , url           = "maximilian-huber.de"
                   , outPath       = "_site"
                   , cssFile       = "css" </> "default.css"

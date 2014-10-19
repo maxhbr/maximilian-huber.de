@@ -24,16 +24,13 @@ compilePage sc s = mapM_ putToFile (pPath s)
           theHead sc s
           body! A.class_ (stringValue (pStyle s)) $ do
             -- Content:
-            -- 
+            --
             H.div ! A.id "super" $
               if pStyle s == "text"
                 then H.div ! A.id "content" $ pCtn s
-                else pCtn s
+                else                          pCtn s
             theHeader sc s
         putToFile f = L.writeFile (outPath sc </> f) fullContent
-
-{- ============================================================================
- -}
 
 theHead sc s = H.head $ do
   meta ! A.httpEquiv "Content-Type" ! A.content "text/html; charset=UTF-8"
@@ -63,11 +60,13 @@ theHeader sc s = H.div ! A.id "header" $ do
 genNavigation sc s = ul ! A.class_ "MenuUl0"
                         ! A.id "navigation" $
     forM_ (subs $ pNav s) (`genNavigation''` 0)
-  where genNavigation'' nav lvl = 
+  where genNavigation'' nav lvl =
           li ! A.class_ (stringValue $ "MenuLi" ++ show lvl)
-             ! A.class_ 
+             ! A.class_
                (if' ( isJust (navPath nav)
-                    && fromJust (navPath nav) `elem` pPath s) "active" "") $ do
+                      && fromJust (navPath nav) `elem` pPath s)
+                    "active"
+                    "") $ do
             case navPath nav of
               Nothing ->
                 H.span ! A.id (stringValue $ "MenuSpan" ++ navTitle nav)$
@@ -79,7 +78,7 @@ genNavigation sc s = ul ! A.class_ "MenuUl0"
                   ! A.href (stringValue $ url sc </> path) $
                     toHtml $
                       navTitle nav
-            unless (Prelude.null (subs nav)) 
+            unless (Prelude.null (subs nav))
                    (H.div ! A.class_ (stringValue $ "infinitem" ++ show lvl) $
                       ul ! A.class_ (stringValue $ "submenu" ++ show lvl)
                          ! A.id (stringValue $ "MenuUl" ++ navTitle nav) $
@@ -99,48 +98,3 @@ compileRaw sc f = do
     compilePage sc $ (defaultP sc) { pPath  = [replaceExtension f ".html"]
                                    , pTitle = Just $ snd (splitFileName f)
                                    , pCtn   = toHtml c } )
-
-
--- genNavigation' sc s = ul ! A.id "navigation" $ do
---   li $ do
---     H.div ! A.class_ "infinitem" $
---       ul ! A.class_ "submenu" ! A.id "galmenu" $ do
---         li ! A.class_ "MenuLi1" ! A.id "MenuLiNatur" $ do
---           a ! A.class_ "MenuA1" ! A.href "/galerie/natur" ! A.id "MenuANatur" $ "Natur"
---           ul ! A.class_ "MenuUl2" $ do
---             li ! A.class_ "MenuLi2" ! A.id "MenuLiDetails" $
---               a ! A.class_ "MenuA2" ! A.href "/galerie/natur/details" ! A.id "MenuADetails" $
---                 "Details"
---             li ! A.class_ "MenuLi2" ! A.id "MenuLiLandschaften" $
---               a ! A.class_ "MenuA2" ! A.href "/galerie/natur/landschaften" ! A.id "MenuALandschaften" $
---                 "Landschaften"
---             li ! A.class_ "MenuLi2" ! A.id "MenuLiTiere" $
---               a ! A.class_ "MenuA2" ! A.href "/galerie/natur/tiere" ! A.id "MenuATiere" $
---                 "Tiere"
---         li ! A.class_ "MenuLi1" ! A.id "MenuLiPeople" $ do
---           a ! A.class_ "MenuA1" ! A.href "/galerie/people" ! A.id "MenuAPeople" $
---             "People"
---           ul ! A.class_ "MenuUl2" $ do
---             li ! A.class_ "MenuLi2" ! A.id "MenuLiBeauty" $
---               a ! A.class_ "MenuA2" ! A.href "/galerie/people/beauty" ! A.id "MenuABeauty" $
---                 "Beauty"
---             li ! A.class_ "MenuLi2" ! A.id "MenuLiFashion" $
---               a ! A.class_ "MenuA2" ! A.href "/galerie/people/fashion" ! A.id "MenuAFashion" $
---                 "Fashion"
---             li ! A.class_ "MenuLi2" ! A.id "MenuLiLifestyle" $ a ! A.class_ "MenuA2" ! A.href "/galerie/people/lifestyle" ! A.id "MenuALifestyle" $ "Lifestyle"
---             li ! A.class_ "MenuLi2" ! A.id "MenuLiMake-up" $ a ! A.class_ "MenuA2" ! A.href "/galerie/people/make-up" ! A.id "MenuAMake-up" $ "Make-up"
---             li ! A.class_ "MenuLi2" ! A.id "MenuLiPortrait" $ a ! A.class_ "MenuA2" ! A.href "/galerie/people/portrait" ! A.id "MenuAPortrait" $ "Portrait"
---         li ! A.class_ "MenuLi1" ! A.id "MenuLiWeiteres" $ do
---           a ! A.class_ "MenuA1" ! A.href "/galerie/weiteres" ! A.id "MenuAWeiteres" $ "Weiteres"
---           ul ! A.class_ "MenuUl2" $ do
---             li ! A.class_ "MenuLi2" ! A.id "MenuLiArchitektur" $ a ! A.class_ "MenuA2" ! A.href "/galerie/weiteres/architektur" ! A.id "MenuAArchitektur" $ "Architektur"
---             li ! A.class_ "MenuLi2" ! A.id "MenuLiProjekte" $ a ! A.class_ "MenuA2" ! A.href "/galerie/weiteres/projekte" ! A.id "MenuAProjekte" $ "Projekte"
---             li ! A.class_ "MenuLi2" ! A.id "MenuLiTechnik" $ a ! A.class_ "MenuA2" ! A.href "/galerie/weiteres/technik" ! A.id "MenuATechnik" $ "Technik"
---     a ! A.href "/" $ "Galerie"
---   li ! A.class_ "active" $ a ! A.href "/webdesign.html" $ "Webdesign"
---   li $ do
---     H.div ! A.class_ "infinitem" $ 
---       ul ! A.class_ "submenu" $ do
---         li $ a ! A.href (stringValue ( url sc </> "/gpg-pubkey.html")) $ "GPG Key"
---         li $ a ! A.href  (stringValue ( url sc </> "/impress.html")) $ "Impress"
---     a ! A.href (stringValue $ url sc </> "/kontakt.html") $ "Kontakt"

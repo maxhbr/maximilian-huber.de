@@ -20,7 +20,7 @@ data Page = P { pPath :: [FilePath] -- urls/filenames
               , pLine :: Html       -- Second nav
               }
 
-data SiteCfg = SC { staticFolders :: [FilePath] -- static fieles
+data SiteCfg = SC { statics :: [FilePath] -- static fieles
                   , url :: String
                   , outPath :: FilePath
                   , cssFile :: FilePath
