@@ -14,6 +14,7 @@ import           System.Directory
 import           Control.Monad
 import           Data.Maybe
 import           System.IO.Unsafe
+import qualified Data.Text as T
 
 import           Common
 
@@ -21,14 +22,36 @@ myBr :: Int -> Html
 myBr i = forM_ [1..i] (const H.br)
 
 -------------------------------------------------------------------------------
--- kontakt sc = (defaultP sc) { pPath  = ["kontakt.html"]
---                            , pTitle = Just "Kontakt"
---                            , pCtn   = ctn }
---   where ctn :: Html
---         ctn = do
---           h1 "Kontakt"
-
-
+kontakt sc = (defaultP sc) { pPath  = ["kontakt.html"]
+                           , pTitle = Just "Kontakt"
+                           , pCtn   = ctn }
+  where ctn :: Html
+        ctn = do
+          h1 "Kontakt"
+          ul $ do
+            li $ do -- Mail
+              "Email: "
+              a ! A.href "javascript:e()"
+                ! A.id "emlToRepl" $ 
+                "kontakt ⟨at⟩ maximilian ⟨minus⟩ huber ⟨punkt⟩ de"
+              script ! A.type_ "text/javascript" $
+                H.preEscapedToHtml $
+                  T.concat
+                    [ "function e (){"
+                    ,   "var h = window.location.host;"
+                    ,   "var a = String.fromCharCode(64);"
+                    ,   "var m = \"kontakt\" + a + h;"
+                    ,   "document.getElementById(\"emlToRepl\").innerHTML = m;"
+                    ,   "document.getElementById(\"emlToRepl\").href = \"mailto:\" + m;"
+                    , "}" ]
+            li $ do -- GitHub
+              "GitHub: "
+              a ! A.href "https://github.com/maximilianhuber/" $
+                "github.com/maximilianhuber"
+            li $ do -- Facebook
+              "Facebook: "
+              a ! A.href "https://www.facebook.com/pages/Fotografie-Maximilian-Huber/122707361149256" $
+                "Fotografie Maximilian Huber"
 
 -------------------------------------------------------------------------------
 webdesign sc = (defaultP sc) { pPath  = ["webdesign.html"]
@@ -37,7 +60,6 @@ webdesign sc = (defaultP sc) { pPath  = ["webdesign.html"]
   where ctn :: Html
         ctn = do
           h1 "Webdesign"
-          H.br
           "Diese Seite ist in purem " 
           a ! A.href "http://www.haskell.org/haskellwiki/Haskell" $
             "Haskell"
@@ -59,7 +81,7 @@ webdesign sc = (defaultP sc) { pPath  = ["webdesign.html"]
                 ! A.alt "Fork me on GitHub"
 
           myBr 3
-          h1 "Mehr"
+          h2 "Mehr"
           ul $ forM_ [ ("http://kreativkarten-huber.de/","kreativkarten-huber.de")
                      , ("http://masananda-ra.de/","masananda-ra.de")
                      , ("http://topstyle.preller.org/","topstyle.preller.org")
@@ -78,7 +100,6 @@ gpgPubkey sc = unsafePerformIO $ do
   where ctn :: Html
         ctn = do
           h1 "GPG public key"
-          myBr 3
           a ! A.href "gpg-pubkey.asc" $ 
             pre $
               toHtml $
@@ -101,7 +122,20 @@ impress sc = (defaultP sc) { pPath  = ["impress.html"]
           H.br
           H.span "Tel: 083459813"
           H.br
-          H.span "Email: hubi135 (at) live (punkt) de"
+          H.span $ do
+            "Email: "
+            a ! A.href "javascript:e()"
+              ! A.id "emlToRepl" $ 
+              "hubi135 ⟨at⟩ live ⟨punkt⟩ de"
+            script ! A.type_ "text/javascript" $
+              H.preEscapedToHtml $
+                T.concat
+                  [ "function e (){"
+                  ,   "var a = String.fromCharCode(64);"
+                  ,   "var m = \"hubi135\" + a + \"live.de\";"
+                  ,   "document.getElementById(\"emlToRepl\").innerHTML = m;"
+                  ,   "document.getElementById(\"emlToRepl\").href = \"mailto:\" + m;"
+                  , "}" ]
           myBr 4
           H.div ! A.class_ "center" $ do
             a ! A.rel "license"

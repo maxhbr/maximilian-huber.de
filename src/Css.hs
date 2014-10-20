@@ -204,6 +204,7 @@ textCss = div # "#super" ? do
     li ? listStyleType disc
     div # ".center" ? ("text-align" -: "center")
     pre ? fontSize (em 0.9)
+    h1 ? paddingBottom (px 50)
 
 maximize :: SiteCfg -> Css
 maximize sc = do

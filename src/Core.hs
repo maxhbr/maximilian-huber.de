@@ -26,7 +26,10 @@ makePage scPre = do
     -- copy static files:
     static sc
     -- compile blaze-html pages
-    compilePages sc [webdesign sc,impress sc,gpgPubkey sc]
+    compilePages sc [ webdesign sc
+                    , kontakt sc
+                    , impress sc
+                    , gpgPubkey sc ]
     -- generate more css with clay:
     genCss sc
     -- read the gallery:

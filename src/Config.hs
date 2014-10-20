@@ -11,7 +11,7 @@ genDefaultNav galNav = N { navTitle = "Home"
                                , navPath  = Just "webdesign.html"
                                , subs     = []}
                            , N { navTitle = "Kontakt"
-                               , navPath  = Nothing
+                               , navPath  = Just "kontakt.html"
                                , subs     =
                                  [ N { navTitle = "gpg-pubkey"
                                      , navPath  = Just "gpg-pubkey.html"
