@@ -46,11 +46,13 @@ kontakt sc = (defaultP sc) { pPath  = ["kontakt.html"]
                     , "}" ]
             li $ do -- GitHub
               "GitHub: "
-              a ! A.href "https://github.com/maximilianhuber/" $
+              a ! A.href "https://github.com/maximilianhuber/"
+                ! A.target "_blank" $
                 "github.com/maximilianhuber"
             li $ do -- Facebook
               "Facebook: "
-              a ! A.href "https://www.facebook.com/pages/Fotografie-Maximilian-Huber/122707361149256" $
+              a ! A.href "https://www.facebook.com/pages/Fotografie-Maximilian-Huber/122707361149256"
+                ! A.target "_blank" $
                 "Fotografie Maximilian Huber"
 
 -------------------------------------------------------------------------------
@@ -61,26 +63,30 @@ webdesign sc = (defaultP sc) { pPath  = ["webdesign.html"]
         ctn = do
           h1 "Webdesign"
           "Diese Seite ist in purem " 
-          a ! A.href "http://www.haskell.org/haskellwiki/Haskell" $
+          a ! A.href "http://www.haskell.org/haskellwiki/Haskell"
+            ! A.target "_blank" $
             "Haskell"
           " geschrieben. Um diese statische HTML Seite zu erzeugen habe ich die folgenden Tools genutzt"
           ul $ do
             li $ do
-              a ! A.href "http://jaspervdj.be/blaze/" $ "blazeHtml"
+              a ! A.href "http://jaspervdj.be/blaze/"! A.target "_blank" $
+                "blazeHtml"
               " zum erzeugen des HTML codes und "
             li $ do
-              a ! A.href "http://fvisser.nl/clay/" $ "clay"
+              a ! A.href "http://fvisser.nl/clay/"! A.target "_blank" $
+                "clay"
               " um die CSS-Dateien zu erzeugen."
           "Der vollständige Code ist auf "
           a ! A.href "https://github.com/maximilianhuber/maximilian-huber.de" $
             "GitHub"
           " zu finden."
-          a ! A.href "https://github.com/maximilianhuber/maximilian-huber.de" $
+          a ! A.href "https://github.com/maximilianhuber/maximilian-huber.de"
+            ! A.target "_blank" $
             img ! A.style "position: absolute; top: 0; right: 0; border: 0;"
                 ! A.src "https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67"
                 ! A.alt "Fork me on GitHub"
 
-          myBr 3
+          H.div ! A.class_ "spacer" $ " "
           h2 "Mehr"
           ul $ forM_ [ ("http://kreativkarten-huber.de/","kreativkarten-huber.de")
                      , ("http://masananda-ra.de/","masananda-ra.de")
@@ -136,7 +142,8 @@ impress sc = (defaultP sc) { pPath  = ["impress.html"]
                   ,   "document.getElementById(\"emlToRepl\").innerHTML = m;"
                   ,   "document.getElementById(\"emlToRepl\").href = \"mailto:\" + m;"
                   , "}" ]
-          myBr 4
+          -- myBr 4
+          H.div ! A.class_ "spacer" $ " "
           H.div ! A.class_ "center" $ do
             a ! A.rel "license"
               ! A.href "http://creativecommons.org/licenses/by-nc-nd/4.0/" $

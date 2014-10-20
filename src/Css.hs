@@ -205,6 +205,13 @@ textCss = div # "#super" ? do
     div # ".center" ? ("text-align" -: "center")
     pre ? fontSize (em 0.9)
     h1 ? paddingBottom (px 50)
+    div # ".spacer" ? do
+      display block
+      width (other "100%")
+      height (px 10)
+      padding 0 (px 30) 0 (px 30)
+      margin (px 20) 0 (px 20) (other "-30px")
+      background bkColor2
 
 maximize :: SiteCfg -> Css
 maximize sc = do
