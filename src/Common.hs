@@ -2,6 +2,7 @@ module Common
   where
 import           Text.Blaze.Html5 (Html)
 import           Data.Monoid
+import           Data.List
 
 --------------------------------------------------------------------------------
 --  Data definitions
@@ -32,4 +33,4 @@ data SiteCfg = SC { statics :: [FilePath] -- static fieles
 if' True a _ = a
 if' False _ b = b
 
-myTst sc = "http" `Li.isPrefixOf` url sc
+myTst sc = "http" `isPrefixOf` url sc

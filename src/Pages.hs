@@ -21,6 +21,16 @@ myBr :: Int -> Html
 myBr i = forM_ [1..i] (const H.br)
 
 -------------------------------------------------------------------------------
+-- kontakt sc = (defaultP sc) { pPath  = ["kontakt.html"]
+--                            , pTitle = Just "Kontakt"
+--                            , pCtn   = ctn }
+--   where ctn :: Html
+--         ctn = do
+--           h1 "Kontakt"
+
+
+
+-------------------------------------------------------------------------------
 webdesign sc = (defaultP sc) { pPath  = ["webdesign.html"]
                              , pTitle = Just "Webdesign"
                              , pCtn   = ctn }

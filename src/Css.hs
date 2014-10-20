@@ -8,7 +8,6 @@ import           Data.Monoid
 -- import qualified Data.Text.Lazy    as L
 import qualified Data.Text.Lazy.IO as L
 import           Data.Text
-import           Data.List as Li
 import           Clay hiding (url)
 import qualified Clay as C
 import qualified Clay.Media as M
