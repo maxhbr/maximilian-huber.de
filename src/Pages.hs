@@ -31,7 +31,7 @@ webdesign sc = (defaultP sc) { pPath  = ["webdesign.html"]
           "Diese Seite ist in purem " 
           a ! A.href "http://www.haskell.org/haskellwiki/Haskell" $
             "Haskell"
-          " geschrieben. Hierbei habe ich die folgenden Tools genutzt"
+          " geschrieben. Um diese statische HTML Seite zu erzeugen habe ich die folgenden Tools genutzt"
           ul $ do
             li $ do
               a ! A.href "http://jaspervdj.be/blaze/" $ "blazeHtml"
@@ -39,10 +39,23 @@ webdesign sc = (defaultP sc) { pPath  = ["webdesign.html"]
             li $ do
               a ! A.href "http://fvisser.nl/clay/" $ "clay"
               " um die CSS-Dateien zu erzeugen."
-          "um eine statische HTML Seite zu erzeugen. Der vollständige Code ist auf "
+          "Der vollständige Code ist auf "
           a ! A.href "https://github.com/maximilianhuber/maximilian-huber.de" $
-            "Github"
+            "GitHub"
           " zu finden."
+          a ! A.href "https://github.com/maximilianhuber/maximilian-huber.de" $
+            img ! A.style "position: absolute; top: 0; right: 0; border: 0;"
+                ! A.src "https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67"
+                ! A.alt "Fork me on GitHub"
+
+          myBr 3
+          h1 "Mehr"
+          ul $ forM_ [ ("http://kreativkarten-huber.de/","kreativkarten-huber.de")
+                     , ("http://masananda-ra.de/","masananda-ra.de")
+                     , ("http://topstyle.preller.org/","topstyle.preller.org")
+                     , ("http://clc-leder.de/","clc-leder.de")
+                     , ("http://photodesign-huber.de/","photodesign-huber.de") ]
+                     (\(u,t) -> li $ a ! A.href u ! A.target "_blank" $ t)
 
 -------------------------------------------------------------------------------
 gpgPubkey sc = unsafePerformIO $ do

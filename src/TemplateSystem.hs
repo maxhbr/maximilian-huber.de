@@ -69,12 +69,13 @@ genNavigation sc s = ul ! A.class_ "MenuUl0"
                         ! A.id "navigation" $
     forM_ (subs $ pNav s) (`genNavigation''` 0)
   where genNavigation'' nav lvl =
-          li ! A.class_ (stringValue $ "MenuLi" ++ show lvl)
-             ! A.class_
-               (if' ( isJust (navPath nav)
-                      && fromJust (navPath nav) `elem` pPath s)
-                    "active"
-                    "") $ do
+          li ! A.class_ 
+                 (stringValue $ 
+                   "MenuLi" ++ show lvl ++ 
+                     if' ( isJust (navPath nav)
+                           && fromJust (navPath nav) `elem` pPath s)
+                         " active"
+                         "") $ do
             case navPath nav of
               Nothing ->
                 H.span ! A.id (stringValue $ "MenuSpan" ++ navTitle nav)$

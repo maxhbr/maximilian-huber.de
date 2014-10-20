@@ -283,7 +283,7 @@ genCss sc = do
     ex <- doesDirectoryExist (outPath sc </> "css")
     unless ex (createDirectoryIfMissing True (outPath sc </> "css"))
     L.writeFile (outPath sc </> "css/default.css") $
-      if "http" `Li.isPrefixOf` url sc
+      if myTst sc
         then renderWith compact [] $ defaultCss sc
         else render                $ defaultCss sc
     -- L.writeFile (outPath sc </> "css/mobile.css") $

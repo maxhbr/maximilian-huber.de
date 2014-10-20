@@ -31,3 +31,5 @@ data SiteCfg = SC { statics :: [FilePath] -- static fieles
 
 if' True a _ = a
 if' False _ b = b
+
+myTst sc = "http" `Li.isPrefixOf` url sc
