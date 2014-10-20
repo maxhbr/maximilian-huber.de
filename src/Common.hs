@@ -3,7 +3,6 @@ module Common
 import           Text.Blaze.Html5 (Html)
 import           Data.Monoid
 
-
 --------------------------------------------------------------------------------
 --  Data definitions
 
@@ -23,7 +22,6 @@ data Page = P { pPath :: [FilePath]       -- urls/filenames
 data SiteCfg = SC { statics :: [FilePath] -- static fieles
                   , url :: String
                   , outPath :: FilePath
-                  , cssFile :: FilePath
                   , defaultP :: Page
                   , indexP :: Maybe FilePath
                   }

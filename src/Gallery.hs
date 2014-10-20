@@ -90,10 +90,11 @@ genGal sc fai = do
     genGalPs :: Gallery -> [Page]
     genGalPs (G subdir l) = map (genGalP subdir (length l)) l
     genGalP :: FilePath -> Int -> (Int, FilePath) -> Page
-    genGalP subdir num (c,img) = galleryPage { pPath  = paths
-                                             , pTitle = Just (show c)
-                                             , pCtn   = genHTML img
-                                             , pLine  = Just line }
+    genGalP subdir num (c,img) = 
+        galleryPage { pPath  = paths
+                    , pTitle = Just $ subdir ++ "/" ++ show c
+                    , pCtn   = genHTML img
+                    , pLine  = Just line }
       where paths = if' (c/=1) [ subdir </> (show c ++ ".html") ]
                               [ subdir </> (show c ++ ".html")
                               , subdir </> "index.html" ]

@@ -1,13 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE CPP #-}
-module Css (css) where
+module Css (genCss) where
 
 import           Prelude hiding (div,(**))
 import qualified Prelude as P
 import           Data.Monoid
-import qualified Data.Text.Lazy    as L
+-- import qualified Data.Text.Lazy    as L
 import qualified Data.Text.Lazy.IO as L
 import           Data.Text
+import           Data.List as Li
 import           Clay hiding (url)
 import qualified Clay as C
 import qualified Clay.Media as M
@@ -187,10 +188,6 @@ layout = do
 
 textCss :: Css
 textCss = div # "#super" ? do
-  position absolute
-  top 0
-  left 0
-  width (other "100%")
   query M.screen [M.minWidth (px (cWidth +9))] (do
     width (px cWidth)
     left (other "50%")
@@ -201,22 +198,24 @@ textCss = div # "#super" ? do
     top (px 10)
     left (px 210)
     padding (px 30) (px 30) (px 30) (px 30)
+    marginBottom (px 10)
     minHeight (px 200)
     query M.screen [M.maxWidth (px 969)] (right (px 0))
     query M.screen [M.minWidth (px 969)] (width (px 596))
     li ? listStyleType disc
     div # ".center" ? ("text-align" -: "center")
+    pre ? fontSize (em 0.9)
 
 maximize :: SiteCfg -> Css
 maximize sc = do
   div # "#reihe" ? display block
   div # "#spalte" ? toInvisible
   div # "#header" # hover ? div # "#spalte" ? toVisible
-  (div # "#super") <> (div # "#imageOverlay") ? do
+  (div # "#super") <> (div # "#imageOverlay") ?  bottom 0
+  (div # "#imageOverlay") ? do
     position absolute
-    top (px 30)
+    top 0
     right 0
-    bottom 0
     left 0
   div # "#imageOverlay" ? position fixed
   div # "#super" |> img ? do
@@ -259,17 +258,36 @@ maximize sc = do
     div # ".inner" # hover ?
       backgroundImage (C.url (pack $ url sc </> "images/2arrow-r-active.png"))
 
-css :: SiteCfg -> IO ()
-css sc = do
-  ex <- doesDirectoryExist (takeDirectory (cssFile sc))
-  unless ex (createDirectoryIfMissing True (takeDirectory (cssFile sc)))
-#if 0
-  L.writeFile (outPath sc </> cssFile sc $ renderWith compact [] $ do
-#else
-  L.writeFile (outPath sc </> cssFile sc) $ render $ do
-#endif
-    general
-    layout
-    body # ".text" ? textCss
-    body # ".maximize" ? maximize sc
-  print "css done"
+defaultCss sc = do
+  general
+  layout
+  div # "#super" ? do
+    position absolute
+    top (px 30)
+    left 0
+    right 0
+  body # ".text" ? textCss
+  body # ".maximize" ? maximize sc
+
+-- mobileCss sc = do
+--   ((div # "#logoWrapper") <> (div # "#spalte") <> (div # "#reihe")) ? do
+--     left 0
+--     marginLeft 0
+--   div # "#reihe" ? left (px 200)
+--   -- div # "#spalte" ? do
+--   --   visibility visible
+--   --   opacity 1
+
+genCss :: SiteCfg -> IO ()
+genCss sc = do
+    ex <- doesDirectoryExist (outPath sc </> "css")
+    unless ex (createDirectoryIfMissing True (outPath sc </> "css"))
+    L.writeFile (outPath sc </> "css/default.css") $
+      if "http" `Li.isPrefixOf` url sc
+        then renderWith compact [] $ defaultCss sc
+        else render                $ defaultCss sc
+    -- L.writeFile (outPath sc </> "css/mobile.css") $
+    --   if "http" `Li.isPrefixOf` url sc
+    --     then render                $ mobileCss sc
+    --     else renderWith compact [] $ mobileCss sc
+    print "css done"

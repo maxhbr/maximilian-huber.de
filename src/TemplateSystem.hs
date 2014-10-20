@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 module TemplateSystem
   ( compilePage , compilePages
-  , compileRaw , compileRaws
+  -- , compileRaw , compileRaws
   ) where
 
 import           Text.Blaze.Internal
@@ -36,7 +36,7 @@ compilePage sc s = mapM_ putToFile (pPath s)
                    ! A.src "http://code.jquery.com/jquery-latest.js" $ " "
             stopRightClicks
             when (pStyle s == "maximize") keyMove
-            analytics
+            -- analytics
         putToFile f = L.writeFile (outPath sc </> f) fullContent
 
 theHead sc s = H.head $ do
@@ -47,16 +47,14 @@ theHead sc s = H.head $ do
   link ! A.rel "shortcut icon"
        ! A.type_ "image/x-icon"
        ! A.href (stringValue $ url sc </> "favicon.ico")
-  link ! A.rel "stylesheet"
-       ! A.type_ "text/css"
-       ! A.href (stringValue $ url sc </> "css/reset.css")
-  link ! A.rel "stylesheet"
-       ! A.type_ "text/css"
-       ! A.href (stringValue $ url sc </> "css/default.css")
+  forM_ ["css/reset.css","css/font.css","css/default.css"]
+    (\css -> link ! A.rel "stylesheet"
+                 ! A.type_ "text/css"
+                 ! A.href (stringValue $ url sc </> css))
 
 theHeader sc s = H.div ! A.id "header" $ do
   H.div ! A.id "logoWrapper" $
-    a ! A.href (stringValue $ url sc) $
+    -- a ! A.href (stringValue $ url sc) $
       img ! A.src (stringValue ( url sc </> "images/logo-dark2.png"))
           ! A.alt "maximilian-huber.de"
           ! A.id "logo"
@@ -66,7 +64,6 @@ theHeader sc s = H.div ! A.id "header" $ do
     genNavigation sc s
     H.div ! A.id "spalteFill2" $ ""
   F.forM_ (pLine s) (H.div ! A.id "reihe")
-  -- Data.Foldable.forM_ (pLine s) (H.div ! A.id "reihe")
 
 genNavigation sc s = ul ! A.class_ "MenuUl0"
                         ! A.id "navigation" $
@@ -132,7 +129,7 @@ keyMove = script ! A.type_ "text/javascript" $
       , "function placement(){"
       ,   "var img = $('#super > img');"
       ,   "$(img).css({ maxWidth: $(window).width() });"
-      ,   "$(img).css({ maxHeight: $(window).height() });"
+      ,   "$(img).css({ maxHeight: ($(window).height() - 30) });"
       , "}"
       , "$(document).ready(function(){ placement(); });"
       , "$(window).resize(function() { placement(); });"
@@ -152,14 +149,14 @@ analytics = (script ! A.type_ "text/javascript") . H.preEscapedToHtml . T.concat
 compilePages :: SiteCfg -> [Page] -> IO()
 compilePages sc = mapM_ (compilePage sc)
 
-compileRaws :: SiteCfg -> [FilePath] -> IO()
-compileRaws sc = mapM_ (compileRaw sc)
+-- compileRaws :: SiteCfg -> [FilePath] -> IO()
+-- compileRaws sc = mapM_ (compileRaw sc)
 
-compileRaw :: SiteCfg -> FilePath -> IO()
-compileRaw sc f = do
-  ex <- doesFileExist f
-  when ex ( do
-    c <- readFile f
-    compilePage sc $ (defaultP sc) { pPath  = [replaceExtension f ".html"]
-                                   , pTitle = Just $ snd (splitFileName f)
-                                   , pCtn   = toHtml c } )
+-- compileRaw :: SiteCfg -> FilePath -> IO()
+-- compileRaw sc f = do
+--   ex <- doesFileExist f
+--   when ex ( do
+--     c <- readFile f
+--     compilePage sc $ (defaultP sc) { pPath  = [replaceExtension f ".html"]
+--                                    , pTitle = Just $ snd (splitFileName f)
+--                                    , pCtn   = pre $ toHtml c } )
