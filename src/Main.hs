@@ -9,6 +9,5 @@ import           Core
 
 main = do
   curr <- getCurrentDirectory
-  makePage ( \x -> (scPre x) { url     = curr </> outPath (scPre x)
-                            , outPath = curr </> outPath (scPre x) })
-    -- (\x -> (scPre x) { outPath = curr </> outPath (scPre x) })
+  makePage (\x -> (scPre x) { outPath = curr </> outPath (scPre x) })
+

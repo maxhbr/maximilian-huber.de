@@ -32,8 +32,8 @@ executable maximilian-huber
   default-language:    Haskell2010
 
 -- Executable maximilian-huber-deploy
-Executable deploy
-  main-is:             Deploy.hs
+Executable local
+  main-is:             MainLocal.hs
   other-extensions:    DeriveDataTypeable, OverloadedStrings
   build-depends:       base >=4.7 && <4.8
                      , directory >=1.2 && <1.3
