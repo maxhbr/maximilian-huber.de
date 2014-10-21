@@ -73,7 +73,8 @@ genNavigation sc s = ul ! A.class_ "MenuUl0"
                  (stringValue $ 
                    "MenuLi" ++ show lvl ++ 
                      if' ( isJust (navPath nav)
-                           && fromJust (navPath nav) `elem` pPath s)
+                           && ( fromJust (navPath nav) `elem` pPath s
+                             || dropFileName (fromJust (navPath nav)) `elem` map dropFileName (pPath s)))
                          " active"
                          "") $ do
             case navPath nav of
