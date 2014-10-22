@@ -20,6 +20,7 @@ import qualified Data.Text as T
 import qualified Data.Foldable as F
 
 import           Common
+import           Debug.Trace (trace)
 
 compilePage :: SiteCfg -> Page -> IO()
 compilePage sc s = mapM_ putToFile (pPath s)
@@ -73,8 +74,7 @@ genNavigation sc s = ul ! A.class_ "MenuUl0"
                  (stringValue $ 
                    "MenuLi" ++ show lvl ++ 
                      if' ( isJust (navPath nav)
-                           && ( fromJust (navPath nav) `elem` pPath s
-                             || dropFileName (fromJust (navPath nav)) `elem` map dropFileName (pPath s)))
+                           && isActive (fromJust (navPath nav)) (pPath s))
                          " active"
                          "") $ do
             case navPath nav of
@@ -93,6 +93,13 @@ genNavigation sc s = ul ! A.class_ "MenuUl0"
                       ul ! A.class_ (stringValue $ "submenu" ++ show lvl)
                          ! A.id (stringValue $ "MenuUl" ++ navTitle nav) $
                            forM_ (subs nav) (`genNavigation''` (lvl + 1)))
+        isActive p ps = p `elem` ps
+                      || ( isActive' p > 0
+                        && dropFileName p `elem` map dropFileName ps)
+          where isActive' :: String -> Int
+                isActive' []    = 0
+                isActive' (h:t) | h == '/'   = isActive' t + 1
+                                | otherwise = isActive' t
 
 stopRightClicks :: Html
 stopRightClicks = script ! A.type_ "text/javascript" $

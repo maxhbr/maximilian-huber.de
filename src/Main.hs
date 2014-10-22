@@ -10,4 +10,3 @@ import           Core
 main = do
   curr <- getCurrentDirectory
   makePage (\x -> (scPre x) { outPath = curr </> outPath (scPre x) })
-
