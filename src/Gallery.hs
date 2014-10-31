@@ -48,7 +48,8 @@ readGal = getCurrentDirectory >>= (`readGal'` "galerie")
   where
     readGal' :: FilePath -> FilePath -> IO FoldrAndImgs
     readGal' topdir curdir = let
-      filterDots  = filter (`notElem` [".", ".."])
+      -- filterDots  = filter (`notElem` [".", ".."])
+      filterDots  = filter (\d -> not $ "." `isPrefixOf` d)
       filterDirs  = filterM (\d -> doesDirectoryExist $ topdir </> curdir </> d)
       filterFiles = filterM (\d -> doesFileExist (topdir </> curdir </> d))
       getAllSubImgs :: [FoldrAndImgs] -> [FilePath]
@@ -60,7 +61,7 @@ readGal = getCurrentDirectory >>= (`readGal'` "galerie")
         fais <- filterDirs allfiles
           >>= mapM (\d -> readGal' topdir (curdir </> d))
         imgs <- filterFiles allfiles
-        let allImgs = getAllSubImgs fais ++ map (curdir </>) [i | i <- imgs , "jpg" `isInfixOf` i]
+        let allImgs = getAllSubImgs fais ++ map (curdir </>) [i | i <- imgs , "jpg" `isSuffixOf` i]
         return $ FAI curdir fais (sortBy imageSort allImgs)
 
 faiToNav :: FoldrAndImgs -> Nav
