@@ -24,6 +24,12 @@ for item in $myfiles; do
       continue
     fi
   fi
-  echo $item
+  echo "    $item"
   cp "${New}${item}" "${DIFF}${item}"
+done
+
+# fix permissions
+for dir in "$DIFF"; do
+  find "$dir" -type d -exec chmod 755 {} \;
+  find "$dir" -type f -exec chmod 644 {} \;
 done

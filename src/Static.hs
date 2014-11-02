@@ -7,9 +7,10 @@ import           Control.Monad (liftM, filterM, forM_, mapM_,when)
 import           Control.Applicative
 import           System.Directory
 import           System.FilePath
-import           Data.List ((\\))
+import           Data.List ((\\),isPrefixOf)
 
 import           Common
+import           Debug.Trace (trace)
 
 static :: SiteCfg -> IO ()
 static sc = static' (outPath sc) (statics sc)
@@ -55,10 +56,11 @@ data Directory = Directory
 -- | Creates a Directory instance from a FilePath.
 createDir :: FilePath -> IO Directory
 createDir path = do
-  contents <- topFileList path
-  subdirs  <- filterM doesDirectoryExist contents
-  files    <- filterM doesFileExist contents
-  return (Directory path subdirs files)
+    contentsPre <- topFileList path
+    let contents = filter (\d -> not $ "." `isPrefixOf` takeFileName d) contentsPre
+    subdirs  <- filterM doesDirectoryExist contents
+    files    <- filterM doesFileExist contents
+    return (Directory path subdirs files)
 
 -- | Walk a directory depth-first. Similar to Python's os.walk and fs.core/walk
 -- from the fs Clojure library.
