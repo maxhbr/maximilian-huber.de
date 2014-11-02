@@ -16,7 +16,11 @@ genDefaultNav galNav = N { navTitle = "Home"
                                  [ N { navTitle = "gpg-pubkey"
                                      , navPath  = Just "gpg-pubkey.html"
                                      , subs     = []}
-                                 , N { navTitle = "Impress"
+                                 -- , N{ navTitle = "Facebook"
+                                 --     , navPath  = Just
+                                 --         "https://www.facebook.com/pages/Fotografie-Maximilian-Huber/122707361149256"
+                                 --     , subs     = []}
+                                 , N{ navTitle = "Impress"
                                      , navPath  = Just "impress.html"
                                      , subs     = []}]}]}
 scPre galNav = SC { statics  = ["css","galerie","images"

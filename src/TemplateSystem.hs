@@ -16,6 +16,7 @@ import           System.Directory
 import           Control.Monad
 import           Data.Maybe
 import           Data.Monoid
+import           Data.List
 import qualified Data.Text as T
 import qualified Data.Foldable as F
 
@@ -85,9 +86,12 @@ genNavigation sc s = ul ! A.class_ "MenuUl0"
               Just path ->
                 a ! A.class_ (stringValue $ "MenuLi" ++ show lvl)
                   ! A.id (stringValue $ "MenuA" ++ navTitle nav)
-                  ! A.href (stringValue $ url sc </> path) $
-                    toHtml $
-                      navTitle nav
+                  ! A.href (stringValue $ 
+                    if' (not ("http" `isPrefixOf` path))
+                        (url sc </> path)
+                        path) $
+                      toHtml $
+                        navTitle nav
             unless (Prelude.null (subs nav))
                    (H.div ! A.class_ (stringValue $ "infinitem" ++ show lvl) $
                       ul ! A.class_ (stringValue $ "submenu" ++ show lvl)
