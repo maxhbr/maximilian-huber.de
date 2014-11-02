@@ -1,4 +1,5 @@
 #!/bin/sh
+#
 # generate encrypted strings with:
 # echo TO_ENCRYPT | openssl enc -aes-128-cbc -a -salt -pass pass:PASSWD
 
@@ -13,11 +14,15 @@ if [ $# -eq 1 ]; then
 fi
 PASS="U2FsdGVkX18AUJ+kKMHsbY2LC9cigLd3JzyKQj6OnPeUdTZegw3WoqZ8c3HlyJLI"
 
+###############################################################################
+
 echo "pass: "
 read -s tPASS
 HOST=`echo $HOST | openssl enc -aes-128-cbc -a -d -salt -pass pass:${tPASS}`
 USER=`echo $USER | openssl enc -aes-128-cbc -a -d -salt -pass pass:${tPASS}`
 PASS=`echo $PASS | openssl enc -aes-128-cbc -a -d -salt -pass pass:${tPASS}`
+
+###############################################################################
 
 # fix permissions
 for dir in "$SOURCEFOLDER"; do
@@ -25,6 +30,7 @@ for dir in "$SOURCEFOLDER"; do
   find "$dir" -type f -exec chmod 644 {} \;
 done
 
+# upload
 lftp -f "
 set ftp:ssl-allow no
 open $HOST
