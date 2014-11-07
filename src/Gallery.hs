@@ -101,9 +101,11 @@ genGal sc fai = do
                               , subdir </> "index.html" ]
 
             prevPage = stringValue $
-              url sc </> subdir </> (show (c-1) ++ ".html")
+              myTrimUrl sc $
+                url sc </> subdir </> (show (c-1) ++ ".html")
             nextPage = stringValue $
-              url sc </> subdir </> (show (c+1) ++ ".html")
+              myTrimUrl sc $
+                url sc </> subdir </> (show (c+1) ++ ".html")
 
             line :: Html
             line = ul $ do

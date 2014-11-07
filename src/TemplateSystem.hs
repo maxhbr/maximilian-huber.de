@@ -48,7 +48,7 @@ theHead sc s = H.head $ do
     Just title -> H.title (toHtml $ "Maximilian-Huber.de | " ++ title)
   link ! A.rel "shortcut icon"
        ! A.type_ "image/x-icon"
-       ! A.href (stringValue $ url sc </> "favicon.ico")
+       ! A.href (stringValue $ myTrimUrl sc $ url sc </> "favicon.ico")
   forM_ ["css/reset.css","css/font.css","css/default.css"]
     (\css -> link ! A.rel "stylesheet"
                  ! A.type_ "text/css"
@@ -88,7 +88,7 @@ genNavigation sc s = ul ! A.class_ "MenuUl0"
                   ! A.id (stringValue $ "MenuA" ++ navTitle nav)
                   ! A.href (stringValue $ 
                     if' (not ("http" `isPrefixOf` path))
-                        (url sc </> path)
+                        (myTrimUrl sc $ url sc </> path)
                         path) $
                       toHtml $
                         navTitle nav

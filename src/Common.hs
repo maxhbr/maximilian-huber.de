@@ -34,3 +34,9 @@ if' True a _ = a
 if' False _ b = b
 
 myTst sc = "http" `isPrefixOf` url sc
+
+myTrimUrl sc url = if' (myTst sc && (".html" `isSuffixOf` url)) 
+                       (if' ("index.html" `isSuffixOf` url)
+                            (take (length url - 10) url)
+                            (take (length url - 5) url))
+                       url
