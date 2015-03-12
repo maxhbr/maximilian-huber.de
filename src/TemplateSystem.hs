@@ -1,6 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 module TemplateSystem
-  ( compilePage , compilePages
+  ( compilePage
+  , compilePages
+  , compilePages'
   -- , compileRaw , compileRaws
   ) where
 
@@ -24,7 +26,9 @@ import           Common
 import           Debug.Trace (trace)
 
 compilePage :: SiteCfg -> Page -> IO()
-compilePage sc s = mapM_ putToFile (pPath s)
+compilePage sc s =
+  trace ("compiling " ++ (Data.List.head $ pPath s))
+    mapM_ putToFile (pPath s)
   where fullContent = renderHtml $ do
           theHead sc s
           body! A.class_ (stringValue (pStyle s)) $ do
@@ -40,6 +44,9 @@ compilePage sc s = mapM_ putToFile (pPath s)
             when (pStyle s == "maximize") keyMove
             -- analytics
         putToFile f = L.writeFile (outPath sc </> f) fullContent
+
+compilePage' :: SiteCfg -> (SiteCfg -> Page) -> IO()
+compilePage' sc s = compilePage sc $ s sc
 
 theHead sc s = H.head $ do
   meta ! A.httpEquiv "Content-Type" ! A.content "text/html; charset=UTF-8"
@@ -161,6 +168,9 @@ analytics = (script ! A.type_ "text/javascript") . H.preEscapedToHtml . T.concat
 
 compilePages :: SiteCfg -> [Page] -> IO()
 compilePages sc = mapM_ (compilePage sc)
+
+compilePages' :: SiteCfg -> [SiteCfg -> Page] -> IO()
+compilePages' sc = mapM_ (compilePage' sc)
 
 -- compileRaws :: SiteCfg -> [FilePath] -> IO()
 -- compileRaws sc = mapM_ (compileRaw sc)

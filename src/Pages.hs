@@ -1,7 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Pages
-  ( kontakt
-  , webdesign
+  ( webdesign
   , gpgPubkey
   , kontakt
   , impress
@@ -24,6 +23,7 @@ import qualified Data.Text as T
 
 import           Common
 import           Pages.Blog as X
+import           Pages.Gallery as X
 
 myBr :: Int -> Html
 myBr i = forM_ [1..i] (const H.br)

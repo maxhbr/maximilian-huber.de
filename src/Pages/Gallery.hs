@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Gallery
+module Pages.Gallery
   ( Gallery (G), FoldrAndImgs
   , readGal
   , genGal, faiToNav

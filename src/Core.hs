@@ -9,7 +9,6 @@ import           Data.Monoid
 import           Data.Maybe
 
 import           Css
-import           Gallery
 import           Common as X
 import           Config as X
 import           Static
@@ -26,14 +25,16 @@ makePage scPre = do
     -- copy static files:
     static sc
     -- compile blaze-html pages
-    compilePages sc [ webdesign sc
-                    , kontakt sc
-                    , impress sc
-                    , gpgPubkey sc ]
+    compilePages' sc [ webdesign
+                    , kontakt
+                    , impress
+                    , gpgPubkey ]
     -- generate more css with clay:
     genCss sc
-    -- read the gallery:
+    -- make the gallery:
     genGal sc fai
+    -- make the blog
+    genBlog sc
     -- copy to main index file:
     when (isJust (indexP sc)) ( do
       ex <- doesFileExist (outPath sc </> fromJust (indexP sc))
