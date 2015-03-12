@@ -10,6 +10,9 @@ genDefaultNav galNav = N { navTitle = "Home"
                            , N { navTitle = "Webdesign"
                                , navPath  = Just "webdesign.html"
                                , subs     = []}
+                           -- , N { navTitle = "Blog"
+                           --     , navPath  = Just "blog.html"
+                           --     , subs     = []}
                            , N { navTitle = "Kontakt"
                                , navPath  = Just "kontakt.html"
                                , subs     =
