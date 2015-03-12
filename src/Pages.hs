@@ -1,6 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Pages
-  where
+  ( kontakt
+  , webdesign
+  , gpgPubkey
+  , kontakt
+  , impress
+  , module X
+  ) where
 
 import           Text.Blaze.Internal
 import           Text.Blaze.Html5 hiding (html, param, map)
@@ -17,6 +23,7 @@ import           System.IO.Unsafe
 import qualified Data.Text as T
 
 import           Common
+import           Pages.Blog as X
 
 myBr :: Int -> Html
 myBr i = forM_ [1..i] (const H.br)
