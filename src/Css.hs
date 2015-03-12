@@ -265,6 +265,18 @@ maximize sc = do
     div # ".inner" # hover ?
       backgroundImage (C.url (pack $ url sc </> "images/2arrow-r-active.png"))
 
+blogCss = div # "#super" ? do
+  div # "#blgContent" ? do
+    h1 ? do
+      paddingTop (px 5)
+      paddingBottom (px 10)
+    h2 ? do
+      paddingTop (px 3)
+      paddingBottom (px 3)
+  a # "#permalink" ? do
+    display block
+    "text-align" -: "right"
+
 defaultCss sc = do
   general
   layout
@@ -273,8 +285,11 @@ defaultCss sc = do
     top (px 30)
     left 0
     right 0
-  body # ".text" ? textCss
+  body # ".text" ? do
+    textCss
+    blogCss
   body # ".maximize" ? maximize sc
+  
 
 -- mobileCss sc = do
 --   ((div # "#logoWrapper") <> (div # "#spalte") <> (div # "#reihe")) ? do

@@ -98,7 +98,8 @@ genGal sc fai = do
                     , pLine  = Just line }
       where paths = if' (c/=1) [ subdir </> (show c ++ ".html") ]
                               [ subdir </> (show c ++ ".html")
-                              , subdir </> "index.html" ]
+                              , subdir </> "index.html"
+                              , subdir ++ ".html" ]
 
             prevPage = stringValue $
               myTrimUrl sc $

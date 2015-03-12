@@ -17,6 +17,7 @@ import qualified Text.Blaze.Html5            as H hiding (head)
 import qualified Text.Blaze.Html5.Attributes as A
 import qualified Text.Markdown               as M
 import qualified Data.Text.Lazy.IO           as L
+import qualified Data.Text                   as T
 
 import           Common
 import           TemplateSystem
@@ -71,43 +72,55 @@ makeBlogPage :: BlogEntry -> SiteCfg -> Page
 makeBlogPage blg sc = (defaultP sc) { pPath  = [ "blog/"
                                                ++ blgPath blg
                                                ++ ".html" ]
-                                    , pTitle = Just $
-                                        blgTitle blg
-                                    , pCtn   = do
-                                        h1 $
-                                          toHtml $
-                                            blgTitle blg
-                                        H.div ! A.id "blgContent" $
-                                          blgContent blg
+                                    , pTitle = Just $ blgTitle blg
+                                    , pCtn   = ctn
                                     }
+  where
+    ctn = do
+      H.div ! A.id "blgContent" $ do
+        h1 $ toHtml $ blgTitle blg
+        blgContent blg
+      H.div ! A.class_ "spacer" $ " "
+      a ! A.href (stringValue $ myTrimUrl sc $ url sc </> "blog/") $
+        "⇦ Zurück zur Übersicht"
 
 blogOverview bP sc = (defaultP sc) { pPath  = [ "blog.html"
                                               , "blog/index.html" ]
                                    , pTitle = Just "Blog"
-                                   , pCtn   = do
-                                       h1 "Blog"
-                                       H.div ! A.class_ "spacer" $ " "
-                                       H.span $
-                                         toHtml $
-                                           blgDate $
-                                             head bP
-                                       h1 $
-                                         toHtml $
-                                           blgTitle $
-                                             head bP
-                                       H.div ! A.id "blgContent" $
-                                         blgContent $
-                                           head bP
-                                       list bP
+                                   , pCtn   = ctn
                                    }
   where
-    list bP = do
+    ctn         = do
+      h1 "Blog"
+      H.span $ toHtml $ unwords
+        [ "Das hier ist noch kein wirklicher Blog, eher ein Proof of Concept."
+        , "Vielleicht werde ich aber irgendwann Inhalt nachliefern."]
+      H.div ! A.class_ "spacer" $ " "
+      H.span $
+        toHtml $
+          blgDate $
+            head bP
+      H.div ! A.id "blgContent" $ do
+        h1 $
+          toHtml $
+            blgTitle $
+              head bP
+        blgContent $
+          head bP
+      a ! A.id "permalink"
+        ! A.href (stringValue $
+          myTrimUrl sc $
+            url sc </> "blog/" ++ blgPath (head bP) ++ ".html") $
+        "permalink"
+      list $ tail bP
+    list bP     = do
       H.div ! A.class_ "spacer" $ " "
       h2 "Mehr:"
       ul $ mapM_ listItm bP
     listItm blg = li $ do
-      a ! A.href (stringValue $ "blog/" ++ blgPath blg ++ ".html") $
+      a ! A.href (stringValue $
+          myTrimUrl sc $
+            url sc </> "blog/" ++ blgPath blg ++ ".html") $
         toHtml $
           blgTitle blg
-      toHtml $
-        " (" ++ blgDate blg ++ ")"
+      toHtml $ " (" ++ blgDate blg ++ ")"

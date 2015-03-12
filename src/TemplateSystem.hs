@@ -27,7 +27,7 @@ import           Debug.Trace (trace)
 
 compilePage :: SiteCfg -> Page -> IO()
 compilePage sc s =
-  trace ("compiling " ++ (Data.List.head $ pPath s))
+  trace ("compiling " ++ Data.List.head (pPath s))
     mapM_ putToFile (pPath s)
   where fullContent = renderHtml $ do
           theHead sc s
@@ -40,6 +40,12 @@ compilePage sc s =
             theHeader sc s
             script ! A.type_ "text/javascript"
                    ! A.src "http://code.jquery.com/jquery-latest.js" $ " "
+
+            when (not (Prelude.null $ pPath s) && 
+                "blog" `isInfixOf` Data.List.head (pPath s)) $ do
+              script ! A.type_ "text/javascript"
+                     ! A.src "http://cdn.jsdelivr.net/highlight.js/8.4/highlight.min.js" $ " "
+              script ! A.type_ "text/javascript" $ "hljs.initHighlightingOnLoad();"
             stopRightClicks
             when (pStyle s == "maximize") keyMove
             -- analytics
@@ -60,6 +66,11 @@ theHead sc s = H.head $ do
     (\css -> link ! A.rel "stylesheet"
                  ! A.type_ "text/css"
                  ! A.href (stringValue $ url sc </> css))
+  when (not (Prelude.null $ pPath s) && 
+      "blog" `isInfixOf` Data.List.head (pPath s)) $
+    link ! A.rel "stylesheet"
+         ! A.type_ "text/css"
+         ! A.href "http://cdn.jsdelivr.net/highlight.js/8.4/styles/default.min.css"
 
 theHeader sc s = H.div ! A.id "header" $ do
   H.div ! A.id "logoWrapper" $
