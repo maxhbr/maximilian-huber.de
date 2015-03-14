@@ -13,3 +13,7 @@ lprBook() {
 }
 ```
 Dazu ist aber zusätzliche Software nötig.
+
+Dies und mehr ist in meiner 
+[.aliasrc](https://github.com/maximilianhuber/myconfig/blob/master/aliasrc) zu
+finden.

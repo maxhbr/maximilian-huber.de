@@ -273,6 +273,10 @@ blogCss = div # "#super" ? do
     h2 ? do
       paddingTop (px 3)
       paddingBottom (px 3)
+    p ? do
+      paddingTop (em 0.5)
+      paddingBottom (em 0.5)
+    ul ? p ? paddingBottom (px 0)
   a # "#permalink" ? do
     display block
     "text-align" -: "right"

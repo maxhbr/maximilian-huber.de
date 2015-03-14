@@ -66,7 +66,7 @@ readBlogs curdir = let
     in do
       allfilespre <- getDirectoryContents curdir
       files <- filterFiles (filterDots allfilespre)
-      mapM readBlog [ p | p <- files , "md" `isSuffixOf` p]
+      mapM readBlog (sortBy (flip compare) [ p | p <- files, "md" `isSuffixOf` p])
 
 makeBlogPage :: BlogEntry -> SiteCfg -> Page
 makeBlogPage blg sc = (defaultP sc) { pPath  = [ "blog/"
@@ -102,9 +102,12 @@ blogOverview bP sc = (defaultP sc) { pPath  = [ "blog.html"
             head bP
       H.div ! A.id "blgContent" $ do
         h1 $
-          toHtml $
-            blgTitle $
-              head bP
+          a ! A.href (stringValue $
+              myTrimUrl sc $
+                url sc </> "blog/" ++ blgPath (head bP) ++ ".html") $
+            toHtml $
+              blgTitle $
+                head bP
         blgContent $
           head bP
       a ! A.id "permalink"
