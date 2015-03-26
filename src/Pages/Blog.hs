@@ -8,16 +8,12 @@ import           Data.List
 import           Data.List.Split (splitOn)
 import           System.Directory
 import           System.FilePath
-import           System.FilePath.Posix
-import           System.Posix.Files
 import           Text.Blaze.Internal
 import           Text.Blaze.Html5 hiding (html, param, map, head)
-import           Text.Blaze.Html.Renderer.Text (renderHtml)
 import qualified Text.Blaze.Html5            as H hiding (head)
 import qualified Text.Blaze.Html5.Attributes as A
 import qualified Text.Markdown               as M
 import qualified Data.Text.Lazy.IO           as L
-import qualified Data.Text                   as T
 
 import           Common
 import           TemplateSystem
@@ -36,6 +32,7 @@ data BlogEntry = B { blgTitle :: String
                    , blgContent :: Html
                    }
 
+genBlog :: SiteCfg -> IO()
 genBlog sc = do
     topdir <- getCurrentDirectory
     ex <- doesDirectoryExist path
@@ -84,6 +81,7 @@ makeBlogPage blg sc = (defaultP sc) { pPath  = [ "blog/"
       a ! A.href (stringValue $ myTrimUrl sc $ url sc </> "blog/") $
         "⇦ Zurück zur Übersicht"
 
+blogOverview :: [BlogEntry] -> SiteCfg -> Page
 blogOverview bP sc = (defaultP sc) { pPath  = [ "blog.html"
                                               , "blog/index.html" ]
                                    , pTitle = Just "Blog"

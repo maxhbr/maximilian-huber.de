@@ -6,10 +6,10 @@
 HOST='U2FsdGVkX1+wIZvS7BWx88K0GudG3pghJJoYXw+78fUPeV6u4+DFp6s2PDjNq1fb'
 USER='U2FsdGVkX187YKKAYgp+go5L6fqFiiRcXaW8YOal9c8='
 TARGETFOLDER='/'
-SOURCEFOLDER='/home/hubi/maximilian-huber/_site-diff'
+SOURCEFOLDER="$HOME/maximilian-huber/_site-diff"
 if [ $# -eq 1 ]; then
   if [ $1 -eq "full" ]; then
-    SOURCEFOLDER='/home/hubi/maximilian-huber/_site'
+    SOURCEFOLDER="$HOME/maximilian-huber/_site"
   fi
 fi
 PASS="U2FsdGVkX18AUJ+kKMHsbY2LC9cigLd3JzyKQj6OnPeUdTZegw3WoqZ8c3HlyJLI"

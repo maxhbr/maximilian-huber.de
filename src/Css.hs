@@ -293,7 +293,6 @@ defaultCss sc = do
     textCss
     blogCss
   body # ".maximize" ? maximize sc
-  
 
 -- mobileCss sc = do
 --   ((div # "#logoWrapper") <> (div # "#spalte") <> (div # "#reihe")) ? do

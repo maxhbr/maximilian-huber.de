@@ -1,7 +1,7 @@
 #!/bin/bash
 # scales all images
 
-# Last modified: Fri Oct 31, 2014  12:44
+# Last modified: Thu Mar 26, 2015  10:13
 
 # written by Maximilian Huber
 #            maximilian-huber.de
@@ -13,12 +13,12 @@ FAIL=0
 ###############################################################################
 ###############################################################################
 ###############################################################################
-IN="/home/hubi/Bilder/00-galerie/"
+IN="$HOME/Bilder/00-galerie/"
 
 [ -d $OUT ] || exit 1
 pushd $IN
 
-OUT="/home/hubi/maximilian-huber/galerie/"
+OUT="$HOME/maximilian-huber/galerie/"
 #mkdir -p ${OUT}.md5/
 mydirs=$(find . \( ! -regex '.*/\..*' \) -type d)
 for item in $mydirs ; do

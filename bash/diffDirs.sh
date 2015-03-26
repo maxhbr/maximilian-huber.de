@@ -3,11 +3,11 @@
 echo 
 echo "Make diff"
 
-NEW="/home/hubi/maximilian-huber/_site/"
-OLD="/home/hubi/maximilian-huber/_site-old/"
-DIFF="/home/hubi/maximilian-huber/_site-diff/"
+NEW="$HOME/maximilian-huber/_site/"
+OLD="$HOME/maximilian-huber/_site-old/"
+DIFF="$HOME/maximilian-huber/_site-diff/"
 
-pushd /home/hubi/maximilian-huber/_site
+pushd "$HOME/maximilian-huber/_site"
 
 rm -r ${DIFF}
 mydirs=$(find . \( ! -regex '.*/\..*' \) -type d)

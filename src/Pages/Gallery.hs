@@ -8,24 +8,17 @@ module Pages.Gallery
 import           Control.Monad
 import           Data.Typeable        (Typeable)
 import           Data.List
-import           Data.Monoid
 import           Data.Char
 import           System.Directory
 import           System.FilePath
-import           System.FilePath.Posix
-import           System.Posix.Files
 
 import           Text.Blaze.Internal
 import           Text.Blaze.Html5 hiding (html, param, map)
-import           Text.Blaze.Html.Renderer.Text (renderHtml)
 import qualified Text.Blaze.Html5            as H
 import qualified Text.Blaze.Html5.Attributes as A
-import qualified Data.Text.Lazy.IO           as L
 
 import           Common
 import           TemplateSystem
-
-import           Debug.Trace (trace)
 
 data FoldrAndImgs = FAI { faiPath :: FilePath
                         , subFais :: [FoldrAndImgs]

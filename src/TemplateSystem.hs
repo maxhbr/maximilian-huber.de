@@ -13,11 +13,8 @@ import qualified Text.Blaze.Html5            as H
 import qualified Text.Blaze.Html5.Attributes as A
 import qualified Data.Text.Lazy.IO           as L
 import           System.FilePath.Posix
-import           System.Posix.Files
-import           System.Directory
 import           Control.Monad
 import           Data.Maybe
-import           Data.Monoid
 import           Data.List
 import qualified Data.Text as T
 import qualified Data.Foldable as F
@@ -29,36 +26,36 @@ compilePage :: SiteCfg -> Page -> IO()
 compilePage sc s =
   trace ("compiling " ++ Data.List.head (pPath s))
     mapM_ putToFile (pPath s)
-  where fullContent = renderHtml $ do
-          theHead sc s
-          body! A.class_ (stringValue (pStyle s)) $ do
-            -- Content:
-            H.div ! A.id "super" $
-              if pStyle s == "text"
-                then H.div ! A.id "content" $ pCtn s
-                else                          pCtn s
-            theHeader sc s
-            script ! A.type_ "text/javascript"
-                   ! A.src "http://code.jquery.com/jquery-latest.js" $ " "
-
-            when (not (Prelude.null $ pPath s) && 
-                "blog" `isInfixOf` Data.List.head (pPath s)) $ do
+  where putToFile f = L.writeFile (outPath sc </> f) $
+          renderHtml $ do
+            theHead sc s
+            body! A.class_ (stringValue (pStyle s)) $ do
+              -- Content:
+              H.div ! A.id "super" $
+                if pStyle s == "text"
+                  then H.div ! A.id "content" $ pCtn s
+                  else                          pCtn s
+              theHeader sc s
               script ! A.type_ "text/javascript"
-                     ! A.src "http://cdn.jsdelivr.net/highlight.js/8.4/highlight.min.js" $ " "
-              script ! A.type_ "text/javascript" $ "hljs.initHighlightingOnLoad();"
-            stopRightClicks
-            when (pStyle s == "maximize") keyMove
-            -- analytics
-        putToFile f = L.writeFile (outPath sc </> f) fullContent
+                     ! A.src "http://code.jquery.com/jquery-latest.js" $ " "
+
+              when (not (Prelude.null $ pPath s) && 
+                  "blog" `isInfixOf` Data.List.head (pPath s)) $ do
+                script ! A.type_ "text/javascript"
+                       ! A.src "http://cdn.jsdelivr.net/highlight.js/8.4/highlight.min.js" $ " "
+                script ! A.type_ "text/javascript" $ "hljs.initHighlightingOnLoad();"
+              stopRightClicks
+              when (pStyle s == "maximize") keyMove
 
 compilePage' :: SiteCfg -> (SiteCfg -> Page) -> IO()
 compilePage' sc s = compilePage sc $ s sc
 
+theHead :: SiteCfg -> Page -> Html
 theHead sc s = H.head $ do
   meta ! A.httpEquiv "Content-Type" ! A.content "text/html; charset=UTF-8"
   case pTitle s of
     Nothing    -> H.title "Maximilian-Huber.de"
-    Just title -> H.title (toHtml $ "Maximilian-Huber.de | " ++ title)
+    Just t -> H.title (toHtml $ "Maximilian-Huber.de | " ++ t)
   link ! A.rel "shortcut icon"
        ! A.type_ "image/x-icon"
        ! A.href (stringValue $ myTrimUrl sc $ url sc </> "favicon.ico")
@@ -72,6 +69,7 @@ theHead sc s = H.head $ do
          ! A.type_ "text/css"
          ! A.href "http://cdn.jsdelivr.net/highlight.js/8.4/styles/default.min.css"
 
+theHeader :: SiteCfg -> Page -> Html
 theHeader sc s = H.div ! A.id "header" $ do
   H.div ! A.id "logoWrapper" $
     -- a ! A.href (stringValue $ url sc) $
@@ -85,6 +83,7 @@ theHeader sc s = H.div ! A.id "header" $ do
     H.div ! A.id "spalteFill2" $ ""
   F.forM_ (pLine s) (H.div ! A.id "reihe")
 
+genNavigation :: SiteCfg -> Page -> Html
 genNavigation sc s = ul ! A.class_ "MenuUl0"
                         ! A.id "navigation" $
     forM_ (subs $ pNav s) (`genNavigation''` 0)
@@ -166,16 +165,16 @@ keyMove = script ! A.type_ "text/javascript" $
       , "$(window).resize(function() { placement(); });"
       ]
 
-analytics :: Html
-analytics = (script ! A.type_ "text/javascript") . H.preEscapedToHtml . T.concat $
-  [ "var _gaq = _gaq || [];"
-  , "_gaq.push(['_setAccount', 'UA-21543191-1']);"
-  , "_gaq.push(['_trackPageview']);"
-  , "(function() {"
-  ,   "var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;"
-  ,   "ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';"
-  ,   "var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);"
-  , "})();" ]
+-- analytics :: Html
+-- analytics = (script ! A.type_ "text/javascript") . H.preEscapedToHtml . T.concat $
+--   [ "var _gaq = _gaq || [];"
+--   , "_gaq.push(['_setAccount', 'UA-21543191-1']);"
+--   , "_gaq.push(['_trackPageview']);"
+--   , "(function() {"
+--   ,   "var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;"
+--   ,   "ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';"
+--   ,   "var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);"
+--   , "})();" ]
 
 compilePages :: SiteCfg -> [Page] -> IO()
 compilePages sc = mapM_ (compilePage sc)

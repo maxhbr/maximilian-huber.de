@@ -26,9 +26,9 @@ makePage scPre = do
     static sc
     -- compile blaze-html pages
     compilePages' sc [ webdesign
-                    , kontakt
-                    , impress
-                    , gpgPubkey ]
+                     , kontakt
+                     , impress
+                     , gpgPubkey ]
     -- generate more css with clay:
     genCss sc
     -- make the gallery:

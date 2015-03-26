@@ -1,7 +1,7 @@
+{-# LANGUAGE ExistentialQuantification #-}
 module Common
   where
 import           Text.Blaze.Html5 (Html)
-import           Data.Monoid
 import           Data.List
 
 --------------------------------------------------------------------------------
@@ -30,11 +30,14 @@ data SiteCfg = SC { statics :: [FilePath] -- static fieles
 --------------------------------------------------------------------------------
 --  Helper
 
+if' :: forall t. Bool -> t -> t -> t
 if' True a _ = a
 if' False _ b = b
 
+myTst :: SiteCfg -> Bool
 myTst sc = "http" `isPrefixOf` url sc
 
+myTrimUrl :: SiteCfg -> String -> String
 myTrimUrl sc url = if' (myTst sc && (".html" `isSuffixOf` url)) 
                        (if' ("index.html" `isSuffixOf` url)
                             (take (length url - 10) url)
