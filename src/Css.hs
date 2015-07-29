@@ -66,16 +66,16 @@ layout = do
   -- ########################################################################
   div # "#header" ? do
     position fixed
-    left 0
-    top 0
-    right 0
+    left (px 0)
+    top (px 0)
+    right (px 0)
     height (px 30)
     background bkColor
   -- ########################################################################
   div # "#reihe" ? do
     {-display none-}
     left (px 200)
-    top 0
+    top (px 0)
     height (px 30)
     paddingRight (px 30)
   -- ########################################################################
@@ -83,8 +83,8 @@ layout = do
     background bkColor
     position absolute
     zIndex 10000
-    left 0
-    top 0
+    left (px 0)
+    top (px 0)
     width (px 180)
     padding (px 10) (px 10) (px 10) (px 10)
     height auto
@@ -106,11 +106,11 @@ layout = do
   -- ########################################################################
   div # "#spalte" ? do
     display block
-    left 0
-    top 0
-    bottom 0
+    left (px 0)
+    top (px 0)
+    bottom (px 0)
     width (px 200)
-    padding 0 0 0 0
+    padding (px 0) (px 0) (px 0) (px 0)
     query M.screen [M.minWidth (px (cWidth +9))] (do
       left (other "50%")
       marginLeft (px (- cWidth `P.div` 2)))
@@ -136,7 +136,7 @@ layout = do
         display block
         width (px 170)
         height (other "100%")
-        padding 0 0 0 (px 30)
+        padding (px 0) (px 0) (px 0) (px 30)
       ul # ".submenu0" ? do
         toInvisible
         position absolute
@@ -169,7 +169,7 @@ layout = do
     ul # "#navigation" ? li # ".active" ? a # hover? color white
   -- ########################################################################
   div # "#reihe" ? do
-    top 0
+    top (px 0)
     left (px 200)
     paddingLeft (px 30)
     lineHeight (px 30)
@@ -180,7 +180,7 @@ layout = do
       marginLeft (px (- cWidth `P.div` 2 + 200)))
     query M.screen [M.minHeight (px 450)] (position fixed)
     display none
-    li ? do 
+    li ? do
       float floatLeft
       marginRight (px 5)
     -- "border-bottom-right-radius" -: "15px"
@@ -209,7 +209,7 @@ textCss = div # "#super" ? do
       display block
       width (other "100%")
       height (px 10)
-      padding 0 (px 30) 0 (px 30)
+      padding (px 0) (px 30) (px 0) (px 30)
       margin (px 20) 0 (px 20) (other "-30px")
       background bkColor2
 
@@ -218,12 +218,12 @@ maximize sc = do
   div # "#reihe" ? display block
   div # "#spalte" ? toInvisible
   div # "#header" # hover ? div # "#spalte" ? toVisible
-  (div # "#super") <> (div # "#imageOverlay") ?  bottom 0
+  (div # "#super") <> (div # "#imageOverlay") ?  bottom (px 0)
   (div # "#imageOverlay") ? do
     position absolute
-    top 0
-    right 0
-    left 0
+    top (px 0)
+    right (px 0)
+    left (px 0)
   div # "#imageOverlay" ? position fixed
   div # "#super" |> img ? do
     maxHeight (other "100%")
@@ -234,20 +234,20 @@ maximize sc = do
   a # "#toleft" <> a # "#toright" ? do
     position absolute
     display block
-    top 0
-    bottom 0
+    top (px 0)
+    bottom (px 0)
     div # ".inner" ? do
       position absolute
-      right 0
-      top 0
-      bottom 0
+      right (px 0)
+      top (px 0)
+      bottom (px 0)
       width (px 100)
       transitions [("opacity",T.sec 0.25,easeOut,T.sec 0.0)]
       opacity 0.3
     div # ".inner" # hover ?
       opacity 1
   a # "#toleft" ? do
-    left 0
+    left (px 0)
     width (px 100)
     div # ".inner" ? do
       backgroundImage (C.url (pack $ url sc </> "images/2arrow-l.png"))
@@ -257,7 +257,7 @@ maximize sc = do
       backgroundImage (C.url (pack $ url sc </> "images/2arrow-l-active.png"))
   a # "#toright" ? do
     left (px 100)
-    right 0
+    right (px 0)
     div # ".inner" ? do
       backgroundImage (C.url (pack $ url sc </> "images/2arrow-r.png"))
       backgroundRepeat noRepeat
@@ -287,8 +287,8 @@ defaultCss sc = do
   div # "#super" ? do
     position absolute
     top (px 30)
-    left 0
-    right 0
+    left (px 0)
+    right (px 0)
   body # ".text" ? do
     textCss
     blogCss
