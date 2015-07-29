@@ -4,7 +4,8 @@ let pkgs = (import <nixpkgs> {});
         let callPackage = self.callPackage;
         in {
             thisPackage = haskellPackages.callPackage (import ./default.nix) {};
-    };});
+        };
+    });
     hsEnv = pkgs.haskellPackages.ghcWithPackages (hsPkgs : ([
         hsPkgs.hlint
         hsPkgs.pointfree
