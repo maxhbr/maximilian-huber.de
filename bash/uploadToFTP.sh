@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # generate encrypted strings with:
-# echo TO_ENCRYPT | openssl enc -aes-128-cbc -a -salt -pass pass:PASSWD
+# echo TO_ENCRYPT | openssl enc -aes-256-cbc -a -salt -pass pass:PASSWD
 
 HOST='U2FsdGVkX187Ydag+Px60qaSZ/Yz3hf2PJiKBWuyvpsX6hskJV5zo+2Yx/EB+duW'
 USER='2FsdGVkX19PP81C9/mfaa2QA2OXgzHACNJ7lrIEMUc='
