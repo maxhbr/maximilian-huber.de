@@ -3,8 +3,8 @@
 # generate encrypted strings with:
 # echo TO_ENCRYPT | openssl enc -aes-128-cbc -a -salt -pass pass:PASSWD
 
-HOST='U2FsdGVkX1+wIZvS7BWx88K0GudG3pghJJoYXw+78fUPeV6u4+DFp6s2PDjNq1fb'
-USER='U2FsdGVkX187YKKAYgp+go5L6fqFiiRcXaW8YOal9c8='
+HOST='U2FsdGVkX187Ydag+Px60qaSZ/Yz3hf2PJiKBWuyvpsX6hskJV5zo+2Yx/EB+duW'
+USER='2FsdGVkX19PP81C9/mfaa2QA2OXgzHACNJ7lrIEMUc='
 TARGETFOLDER='/'
 SOURCEFOLDER="$HOME/maximilian-huber/_site-diff"
 if [ $# -eq 1 ]; then
@@ -12,15 +12,16 @@ if [ $# -eq 1 ]; then
     SOURCEFOLDER="$HOME/maximilian-huber/_site"
   fi
 fi
-PASS="U2FsdGVkX18AUJ+kKMHsbY2LC9cigLd3JzyKQj6OnPeUdTZegw3WoqZ8c3HlyJLI"
+PASS='U2FsdGVkX1/+fRa9RGfxVA92wxUdZ8k6J3TUCZceOELgp8DTBiX3+yZPCGbiIDxy'
+
 
 ###############################################################################
 
 echo "pass: "
 read -s tPASS
-HOST=`echo $HOST | openssl enc -aes-128-cbc -a -d -salt -pass pass:${tPASS}`
-USER=`echo $USER | openssl enc -aes-128-cbc -a -d -salt -pass pass:${tPASS}`
-PASS=`echo $PASS | openssl enc -aes-128-cbc -a -d -salt -pass pass:${tPASS}`
+HOST=`echo $HOST | openssl enc -aes-256-cbc -a -d -salt -pass pass:${tPASS}`
+USER=`echo $USER | openssl enc -aes-256-cbc -a -d -salt -pass pass:${tPASS}`
+PASS=`echo $PASS | openssl enc -aes-256-cbc -a -d -salt -pass pass:${tPASS}`
 
 ###############################################################################
 
