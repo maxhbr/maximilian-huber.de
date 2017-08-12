@@ -13,7 +13,7 @@ Er enthält beisplielsweise die Funktionen
 * und mehr
 
 Die autoload-Datei
-[.vim/autoload/myVersionControl.vim](https://github.com/maximilianhuber/myconfig/blob/master/vim/autoload/myVersionControl.vim):
+[.vim/autoload/myVersionControl.vim](https://github.com/maxhbr/myconfig/blob/master/vim/autoload/myVersionControl.vim):
 ```Vim Script
 " minimal git/svn wrapper written by maximilian-huber.de
 " ====  Git  ========================================================
@@ -69,7 +69,7 @@ function! myVersionControl#SVNAdd()
 endfunction
 ```
 Die Datei
-[.vim/plugin/myVersionControl.vim](https://github.com/maximilianhuber/myconfig/blob/master/vim/plugin/myVersionControl.vim):
+[.vim/plugin/myVersionControl.vim](https://github.com/maxhbr/myconfig/blob/master/vim/plugin/myVersionControl.vim):
 ```Vim Script
 " minimal git/svn wrapper written by maximilian-huber.de
 " ====  Git  ========================================================
