@@ -4,17 +4,15 @@ module Static (
 
 {-import           System.Path   -}
 import           Control.Monad (liftM, filterM, forM_, mapM_,when)
-import           Control.Applicative
 import           System.Directory
 import           System.FilePath
 import           Data.List ((\\),isPrefixOf)
 
 import           Common
-import           Debug.Trace (trace)
 
 static :: SiteCfg -> IO ()
 static sc = static' (outPath sc) (statics sc)
-  where static' op []     = print "static files done"
+  where static' _ []      = print "static files done"
         static' op (d:ds) = do
           fex <- doesFileExist d
           when fex $ copyFile d (op </> d)

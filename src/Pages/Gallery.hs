@@ -54,7 +54,7 @@ readGal = getCurrentDirectory >>= (`readGal'` "galerie")
         fais <- filterDirs allfiles
           >>= mapM (\d -> readGal' topdir (curdir </> d))
         imgs <- filterFiles allfiles
-        let allImgs = getAllSubImgs fais ++ map (curdir </>) [i | i <- imgs , "jpg" `isSuffixOf` i]
+        let allImgs = getAllSubImgs fais ++ map (curdir </>) [i | i <- imgs , "jpg" `isSuffixOf` i || "png" `isSuffixOf` i || "JPG" `isSuffixOf` i]
         return $ FAI curdir fais (sortBy imageSort allImgs)
 
 faiToNav :: FoldrAndImgs -> Nav

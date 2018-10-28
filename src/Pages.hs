@@ -32,8 +32,8 @@ kontakt sc = (defaultP sc) { pPath  = ["kontakt.html"]
             li $ do -- Mail
               _ <- "Email: "
               a ! A.href "javascript:twoClkEml('kontakt','emlToRepl')"
-                ! A.id "emlToRepl" $ 
-                "kontakt ⟨at⟩ maximilian ⟨minus⟩ huber ⟨punkt⟩ de"
+                ! A.id "emlToRepl" $
+                "kontakt <at> maximilian <minus> huber <punkt> de"
               script ! A.type_ "text/javascript" $
                 H.preEscapedToHtml $
                   T.concat
@@ -61,7 +61,7 @@ webdesign sc = (defaultP sc) { pPath  = ["webdesign.html"]
   where ctn :: Html
         ctn = do
           h1 "Webdesign"
-          _ <- "Diese Seite ist in purem " 
+          _ <- "Diese Seite ist in purem "
           a ! A.href "http://www.haskell.org/haskellwiki/Haskell"
             ! A.target "_blank" $
             "Haskell"
@@ -75,7 +75,7 @@ webdesign sc = (defaultP sc) { pPath  = ["webdesign.html"]
               a ! A.href "http://fvisser.nl/clay/"! A.target "_blank" $
                 "clay"
               " um die CSS-Dateien zu erzeugen."
-          _ <- "Der vollständige Code ist auf "
+          _ <- "Der komplette Code ist auf "
           a ! A.href "https://github.com/maxhbr/maximilian-huber.de" $
             "GitHub"
           _ <- " zu finden."
@@ -85,20 +85,11 @@ webdesign sc = (defaultP sc) { pPath  = ["webdesign.html"]
                 ! A.src "https://camo.githubusercontent.com/a6677b08c955af8400f44c6298f40e7d19cc5b2d/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f677261795f3664366436642e706e67"
                 ! A.alt "Fork me on GitHub"
 
-          H.div ! A.class_ "spacer" $ " "
-          h2 "Mehr"
-          ul $ forM_ [ ("http://kreativkarten-huber.de/","kreativkarten-huber.de")
-                     , ("http://masananda-ra.de/","masananda-ra.de")
-                     , ("http://topstyle.preller.org/","topstyle.preller.org")
-                     , ("http://clc-leder.de/","clc-leder.de")
-                     , ("http://photodesign-huber.de/","photodesign-huber.de") ]
-                     (\(u,t) -> li $ a ! A.href u ! A.target "_blank" $ t)
-
 -------------------------------------------------------------------------------
 gpgPubkey :: SiteCfg -> Page
 gpgPubkey sc = unsafePerformIO $ do
     fex <- doesFileExist "gpg-pubkey.asc"
-    return (if fex 
+    return (if fex
       then (defaultP sc) { pPath  = ["gpg-pubkey.html"]
                          , pTitle = Just "GPG public key"
                          , pCtn   = ctn }
@@ -106,7 +97,7 @@ gpgPubkey sc = unsafePerformIO $ do
   where ctn :: Html
         ctn = do
           h1 "GPG public key"
-          a ! A.href "gpg-pubkey.asc" $ 
+          a ! A.href "gpg-pubkey.asc" $
             pre $
               toHtml $
                 unsafePerformIO subCtn
@@ -118,31 +109,30 @@ impress sc = (defaultP sc) { pPath  = ["impress.html"]
                            , pTitle = Just "Impress"
                            , pCtn   = ctn }
   where ctn :: Html
-        ctn = do 
+        ctn = do
           h1 "Impress"
           H.span "Maximilian Huber"
           H.br
-          H.span "Reichenbacher Str. 20"
+          H.span "Goegginger Str. 32a"
           H.br
-          H.span "87677 Stöttwang"
+          H.span "8619 Augsburg"
           H.br
           H.br
-          H.span "Tel: 083459813"
+          H.span "Tel: 00491743410223"
           H.br
           H.span $ do
             _ <- "Email: "
-            a ! A.href "javascript:e()"
-              ! A.id "emlToRepl" $ 
-              "hubi135 ⟨at⟩ live ⟨punkt⟩ de"
+            a ! A.href "javascript:twoClkEml('kontakt','emlToRepl')"
+              ! A.id "emlToRepl" $
+              "kontakt <at> maximilian <minus> huber <punkt> de"
             script ! A.type_ "text/javascript" $
               H.preEscapedToHtml $
                 T.concat
-                  [ "function e (){"
-                  ,   "var a = String.fromCharCode(64);"
-                  ,   "var m = \"hubi135\" + a + \"live.de\";"
-                  ,   "document.getElementById(\"emlToRepl\").innerHTML = m;"
-                  ,   "document.getElementById(\"emlToRepl\").href = \"mailto:\" + m;"
-                  , "}" ]
+                [ "function twoClkEml (n,c){"
+                , "var m = n + String.fromCharCode(64) + window.location.host;"
+                , "document.getElementById(c).innerHTML = m;"
+                , "document.getElementById(c).href = decodeURIComponent(atob(\"bWFpbHRvJTNB\")) + m;"
+                , "}" ]
           H.div ! A.class_ "spacer" $ " "
           H.div ! A.class_ "center" $ do
             a ! A.rel "license"

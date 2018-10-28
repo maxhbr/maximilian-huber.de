@@ -21,7 +21,6 @@ makePage scPre = do
     fai <- readGal
 
     let sc = scPre (faiToNav fai)
-    makePagePre sc
     -- copy static files:
     static sc
     -- compile blaze-html pages
@@ -33,19 +32,12 @@ makePage scPre = do
     genCss sc
     -- make the gallery:
     genGal sc fai
-    -- make the blog
-    genBlog sc
+    -- -- make the blog
+    -- genBlog sc
     -- copy to main index file:
     when (isJust (indexP sc)) ( do
       ex <- doesFileExist (outPath sc </> fromJust (indexP sc))
       when ex $
         copyFile (outPath sc </> fromJust (indexP sc)) 
                  (outPath sc </> "index.html"))
-  where makePagePre sc = do
-          ex <- doesDirectoryExist (outPath sc)
-          when ex (do
-            ex <- doesDirectoryExist (outPath sc ++ "-old")
-            when ex (removeDirectoryRecursive (outPath sc ++ "-old"))
-            renameDirectory (outPath sc) (outPath sc ++ "-old"))
-          unless ex (createDirectoryIfMissing True (outPath sc))
 
