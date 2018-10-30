@@ -39,11 +39,6 @@ compilePage sc s =
               script ! A.type_ "text/javascript"
                      ! A.src "http://code.jquery.com/jquery-latest.js" $ " "
 
-              when (not (Prelude.null $ pPath s) && 
-                  "blog" `isInfixOf` Data.List.head (pPath s)) $ do
-                script ! A.type_ "text/javascript"
-                       ! A.src "http://cdn.jsdelivr.net/highlight.js/8.4/highlight.min.js" $ " "
-                script ! A.type_ "text/javascript" $ "hljs.initHighlightingOnLoad();"
               stopRightClicks
               when (pStyle s == "maximize") keyMove
 
@@ -63,11 +58,6 @@ theHead sc s = H.head $ do
     (\css -> link ! A.rel "stylesheet"
                  ! A.type_ "text/css"
                  ! A.href (stringValue $ url sc </> css))
-  when (not (Prelude.null $ pPath s) && 
-      "blog" `isInfixOf` Data.List.head (pPath s)) $
-    link ! A.rel "stylesheet"
-         ! A.type_ "text/css"
-         ! A.href "http://cdn.jsdelivr.net/highlight.js/8.4/styles/default.min.css"
 
 theHeader :: SiteCfg -> Page -> Html
 theHeader sc s = H.div ! A.id "header" $ do
@@ -88,9 +78,9 @@ genNavigation sc s = ul ! A.class_ "MenuUl0"
                         ! A.id "navigation" $
     forM_ (subs $ pNav s) (`genNavigation''` 0)
   where genNavigation'' nav lvl =
-          li ! A.class_ 
-                 (stringValue $ 
-                   "MenuLi" ++ show lvl ++ 
+          li ! A.class_
+                 (stringValue $
+                   "MenuLi" ++ show lvl ++
                      if' ( isJust (navPath nav)
                            && isActive (fromJust (navPath nav)) (pPath s))
                          " active"
@@ -103,7 +93,7 @@ genNavigation sc s = ul ! A.class_ "MenuUl0"
               Just path ->
                 a ! A.class_ (stringValue $ "MenuLi" ++ show lvl)
                   ! A.id (stringValue $ "MenuA" ++ navTitle nav)
-                  ! A.href (stringValue $ 
+                  ! A.href (stringValue $
                     if' (not ("http" `isPrefixOf` path))
                         (myTrimUrl sc $ url sc </> path)
                         path) $
@@ -130,6 +120,7 @@ stopRightClicks = script ! A.type_ "text/javascript" $
              ,         "return false;"
              ,     "});"
              , "});" ]
+
 keyMove :: Html
 keyMove = script ! A.type_ "text/javascript" $
   H.preEscapedToHtml $
@@ -165,31 +156,8 @@ keyMove = script ! A.type_ "text/javascript" $
       , "$(window).resize(function() { placement(); });"
       ]
 
--- analytics :: Html
--- analytics = (script ! A.type_ "text/javascript") . H.preEscapedToHtml . T.concat $
---   [ "var _gaq = _gaq || [];"
---   , "_gaq.push(['_setAccount', 'UA-21543191-1']);"
---   , "_gaq.push(['_trackPageview']);"
---   , "(function() {"
---   ,   "var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;"
---   ,   "ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';"
---   ,   "var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);"
---   , "})();" ]
-
 compilePages :: SiteCfg -> [Page] -> IO()
 compilePages sc = mapM_ (compilePage sc)
 
 compilePages' :: SiteCfg -> [SiteCfg -> Page] -> IO()
 compilePages' sc = mapM_ (compilePage' sc)
-
--- compileRaws :: SiteCfg -> [FilePath] -> IO()
--- compileRaws sc = mapM_ (compileRaw sc)
-
--- compileRaw :: SiteCfg -> FilePath -> IO()
--- compileRaw sc f = do
---   ex <- doesFileExist f
---   when ex ( do
---     c <- readFile f
---     compilePage sc $ (defaultP sc) { pPath  = [replaceExtension f ".html"]
---                                    , pTitle = Just $ snd (splitFileName f)
---                                    , pCtn   = pre $ toHtml c } )

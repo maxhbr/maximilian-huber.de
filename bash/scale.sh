@@ -39,14 +39,9 @@ for item in $myfiles ; do
   if [ ! "$b" == "$a" ] ; then
     echo "do       $item"
     outItem="${item%.*}.jpg"
-    font=/nix/var/nix/profiles/system/sw/share/X11-fonts/DejaVuSans.ttf
-    # font=/usr/share/fonts/TTF/DejaVuSans.ttf
     ( convert $item \
         -resize '1920x1080>'\
         -quality 85%\
-        -font $font -pointsize 18 -gravity SouthEast\
-        -fill rgba\(200,200,200,1\) -draw "text 7,7 '©Maximilian-Huber.de'"\
-        -fill rgba\(55,55,55,1\) -draw "text 6,6 '©Maximilian-Huber.de'"\
         -unsharp 1.5x1.2+1.0+0.10\
         -interlace Plane\
         -strip\

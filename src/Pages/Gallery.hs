@@ -41,7 +41,6 @@ readGal = getCurrentDirectory >>= (`readGal'` "galerie")
   where
     readGal' :: FilePath -> FilePath -> IO FoldrAndImgs
     readGal' topdir curdir = let
-      -- filterDots  = filter (`notElem` [".", ".."])
       filterDots  = filter (\d -> not $ "." `isPrefixOf` d)
       filterDirs  = filterM (\d -> doesDirectoryExist $ topdir </> curdir </> d)
       filterFiles = filterM (\d -> doesFileExist (topdir </> curdir </> d))
@@ -69,7 +68,7 @@ genGal sc fai = do
     let rG = flattenFais fai
     mapM_ genGalDirs rG
     compilePages sc $ concatMap genGalPs rG
-    print "gallery done"
+    putStrLn "gallery done"
   where
     flattenFais :: FoldrAndImgs -> [Gallery]
     flattenFais (FAI p fais is) = G p (zip [1..] is) : concatMap flattenFais fais
@@ -84,7 +83,7 @@ genGal sc fai = do
     genGalPs :: Gallery -> [Page]
     genGalPs (G subdir l) = map (genGalP subdir (length l)) l
     genGalP :: FilePath -> Int -> (Int, FilePath) -> Page
-    genGalP subdir num (c,img) = 
+    genGalP subdir num (c,img) =
         galleryPage { pPath  = paths
                     , pTitle = Just $ subdir ++ "/" ++ show c
                     , pCtn   = genHTML img
@@ -116,7 +115,7 @@ genGal sc fai = do
 
             genHTML img = do
               H.img ! A.src (stringValue (url sc </> img))
-              H.div ! A.id "imageOverlay" $ do 
+              H.div ! A.id "imageOverlay" $ do
                 when (c > 1) ( a ! A.href prevPage
                                  ! A.id "toleft" $
                   H.div $
