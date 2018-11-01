@@ -9,6 +9,7 @@ import           Data.Monoid
 import qualified Data.Text.Lazy.IO as L
 import           Data.Text
 import           Clay hiding (url)
+import           Clay.Box
 import qualified Clay as C
 import qualified Clay.Media as M
 import qualified Clay.Time as T
@@ -71,6 +72,7 @@ layout = do
     right (px 0)
     height (px 30)
     background bkColor
+    zIndex 10000
   -- ########################################################################
   div # "#reihe" ? do
     {-display none-}
@@ -90,9 +92,9 @@ layout = do
     height auto
     -- "border-bottom-right-radius" -: "15px"
     -- "border-bottom-left-radius" -: "15px"
-    query M.screen [M.minWidth (px (cWidth +9))] (do
+    query M.screen [M.minWidth (px (cWidth +9))] $ do
       left (other "50%")
-      marginLeft (px (- cWidth `P.div` 2)))
+      marginLeft ((px (- cWidth)) @/ 2)
     img # "#logo" ? do
       width (other "100%")
       height auto
@@ -111,9 +113,9 @@ layout = do
     bottom (px 0)
     width (px 200)
     padding (px 0) (px 0) (px 0) (px 0)
-    query M.screen [M.minWidth (px (cWidth +9))] (do
+    query M.screen [M.minWidth (px (cWidth +9))] $ do
       left (other "50%")
-      marginLeft (px (- cWidth `P.div` 2)))
+      marginLeft ((px (- cWidth)) @/ 2)
     query M.screen [M.minHeight (px 450)] (position fixed)
     (ul # "#navigation" |> li) <> (div # "#spalteFill2") ? marginTop (px 10)
     (ul # "#navigation" |> li)
@@ -175,22 +177,21 @@ layout = do
     lineHeight (px 30)
     display block
     background bkColor
-    query M.screen [M.minWidth (px (cWidth +9))] (do
+    query M.screen [M.minWidth (px (cWidth +9))] $ do
       left (other "50%")
-      marginLeft (px (- cWidth `P.div` 2 + 200)))
+      marginLeft ((px (- cWidth)) @/ 2 @+@ (px 200))
     query M.screen [M.minHeight (px 450)] (position fixed)
     display none
     li ? do
       float floatLeft
       marginRight (px 5)
-    -- "border-bottom-right-radius" -: "15px"
 
 textCss :: Css
 textCss = div # "#super" ? do
-  query M.screen [M.minWidth (px (cWidth +9))] (do
+  query M.screen [M.minWidth (px (cWidth +9))] $ do
     width (px cWidth)
     left (other "50%")
-    marginLeft (px (- cWidth `P.div` 2)))
+    marginLeft ((px (- cWidth)) @/ 2)
   div # "#content" ? do
     background bkColor1
     position absolute
@@ -202,7 +203,8 @@ textCss = div # "#super" ? do
     query M.screen [M.maxWidth (px 969)] (right (px 0))
     query M.screen [M.minWidth (px 969)] (width (px 596))
     li ? listStyleType disc
-    div # ".center" ? ("text-align" -: "center")
+    div # ".center" ?
+      ("text-align" -: "center")
     pre ? fontSize (em 0.9)
     h1 ? paddingBottom (px 50)
     div # ".spacer" ? do
@@ -214,72 +216,77 @@ textCss = div # "#super" ? do
       background bkColor2
 
 maximize :: SiteCfg -> Css
-maximize sc = do
-  div # "#reihe" ? display block
-  div # "#spalte" ? toInvisible
-  div # "#header" # hover ? div # "#spalte" ? toVisible
-  (div # "#super") <> (div # "#imageOverlay") ?  bottom (px 0)
-  (div # "#imageOverlay") ? do
-    position absolute
-    top (px 0)
-    right (px 0)
-    left (px 0)
-  div # "#imageOverlay" ? position fixed
-  div # "#super" |> img ? do
-    maxHeight (other "100%")
-    maxWidth (other "100%")
-    marginLeft auto
-    marginRight auto
-    display (other "table")
-  a # "#toleft" <> a # "#toright" ? do
-    position absolute
-    display block
-    top (px 0)
-    bottom (px 0)
-    div # ".inner" ? do
+maximize sc = let
+    fitMaximized = do
       position absolute
+      top (px 0)
       right (px 0)
+      left (px 0)
+      bottom (px 0)
+    blurRadius = 50
+  in do
+    div # "#reihe" ? display block
+    div # "#spalte" ? toInvisible
+    div # "#header" # hover ? div # "#spalte" ? toVisible
+    (div # "#super") <> (div # "#imageOverlay") ?  bottom (px 0)
+    (div # "#imageOverlay") ? do
+      fitMaximized
+      zIndex 1010
+    div # "#imageOverlay" ? position fixed
+    div # "#super" |> (div # "#imgBackgroundWrapper") ? do
+      fitMaximized
+      zIndex 100
+      overflow hidden
+    div # "#super" |> (div # "#imgBackgroundWrapper") |> (div # "#imgBackground") ? do
+      fitMaximized
+      margin (px (-blurRadius * 2)) (px (-blurRadius * 2)) (px (-blurRadius * 2)) (px (-blurRadius * 2))
+      zIndex 100
+      backgroundPosition (placed sideCenter sideCenter)
+      backgroundSize cover
+      "filter" -: (pack $ "blur(" ++ show blurRadius ++ "px)")
+    div # "#super" |> img ? do
+      maxHeight (other "100%")
+      maxWidth (other "100%")
+      marginLeft auto
+      marginRight auto
+      display (other "table")
+      position relative
+      zIndex 1000
+      boxShadow . pure $ bkColor `bsColor` (shadowWithSpread (px 0) (px 0) (px (5 * blurRadius)) (px (- blurRadius)))
+    a # "#toleft" <> a # "#toright" ? do
+      position absolute
+      zIndex 5000
+      display block
       top (px 0)
       bottom (px 0)
+      div # ".inner" ? do
+        position absolute
+        right (px 0)
+        top (px 0)
+        bottom (px 0)
+        width (px 100)
+        transitions [("opacity",T.sec 0.25,easeOut,T.sec 0.0)]
+        opacity 0.3
+      div # ".inner" # hover ?
+        opacity 1
+    a # "#toleft" ? do
+      left (px 0)
       width (px 100)
-      transitions [("opacity",T.sec 0.25,easeOut,T.sec 0.0)]
-      opacity 0.3
-    div # ".inner" # hover ?
-      opacity 1
-  a # "#toleft" ? do
-    left (px 0)
-    width (px 100)
-    div # ".inner" ? do
-      backgroundImage (C.url (pack $ url sc </> "images/2arrow-l.png"))
-      backgroundRepeat noRepeat
-      backgroundPosition (placed sideLeft sideCenter)
-    div # ".inner" # hover ?
-      backgroundImage (C.url (pack $ url sc </> "images/2arrow-l-active.png"))
-  a # "#toright" ? do
-    left (px 100)
-    right (px 0)
-    div # ".inner" ? do
-      backgroundImage (C.url (pack $ url sc </> "images/2arrow-r.png"))
-      backgroundRepeat noRepeat
-      backgroundPosition (placed sideRight sideCenter)
-    div # ".inner" # hover ?
-      backgroundImage (C.url (pack $ url sc </> "images/2arrow-r-active.png"))
-
-blogCss = div # "#super" ? do
-  div # "#blgContent" ? do
-    h1 ? do
-      paddingTop (px 5)
-      paddingBottom (px 10)
-    h2 ? do
-      paddingTop (px 3)
-      paddingBottom (px 3)
-    p ? do
-      paddingTop (em 0.5)
-      paddingBottom (em 0.5)
-    ul ? p ? paddingBottom (px 0)
-  a # "#permalink" ? do
-    display block
-    "text-align" -: "right"
+      div # ".inner" ? do
+        backgroundImage (C.url (pack $ url sc </> "images/2arrow-l.png"))
+        backgroundRepeat noRepeat
+        backgroundPosition (placed sideLeft sideCenter)
+      div # ".inner" # hover ?
+        backgroundImage (C.url (pack $ url sc </> "images/2arrow-l-active.png"))
+    a # "#toright" ? do
+      left (px 100)
+      right (px 0)
+      div # ".inner" ? do
+        backgroundImage (C.url (pack $ url sc </> "images/2arrow-r.png"))
+        backgroundRepeat noRepeat
+        backgroundPosition (placed sideRight sideCenter)
+      div # ".inner" # hover ?
+        backgroundImage (C.url (pack $ url sc </> "images/2arrow-r-active.png"))
 
 defaultCss sc = do
   general
@@ -291,7 +298,6 @@ defaultCss sc = do
     right (px 0)
   body # ".text" ? do
     textCss
-    blogCss
   body # ".maximize" ? maximize sc
 
 -- mobileCss sc = do

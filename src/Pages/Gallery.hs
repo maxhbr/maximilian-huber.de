@@ -114,6 +114,10 @@ genGal sc fai = do
               li $ toHtml subdir
 
             genHTML img = do
+              H.div ! A.id "imgBackgroundWrapper" $
+                H.div ! A.id "imgBackground"
+                      ! A.style (stringValue $ "background-image: url(" ++ (url sc </> img) ++ ")") $
+                " "
               H.img ! A.src (stringValue (url sc </> img))
               H.div ! A.id "imageOverlay" $ do
                 when (c > 1) ( a ! A.href prevPage
