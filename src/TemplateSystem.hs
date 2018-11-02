@@ -39,7 +39,6 @@ compilePage sc s =
               script ! A.type_ "text/javascript"
                      ! A.src "http://code.jquery.com/jquery-latest.js" $ " "
 
-              stopRightClicks
               when (pStyle s == "maximize") keyMove
 
 compilePage' :: SiteCfg -> (SiteCfg -> Page) -> IO()
@@ -112,15 +111,6 @@ genNavigation sc s = ul ! A.class_ "MenuUl0"
                 isActive' (h:t) | h == '/'   = isActive' t + 1
                                 | otherwise = isActive' t
 
-stopRightClicks :: Html
-stopRightClicks = script ! A.type_ "text/javascript" $
-  H.preEscapedToHtml $
-    T.concat [ "$(document).ready(function(){"
-             ,     "$(document).bind(\"contextmenu\",function(e){"
-             ,         "return false;"
-             ,     "});"
-             , "});" ]
-
 keyMove :: Html
 keyMove = script ! A.type_ "text/javascript" $
   H.preEscapedToHtml $
@@ -147,13 +137,6 @@ keyMove = script ! A.type_ "text/javascript" $
       ,       "break;"
       ,   "}"
       , "});"
-      , "function placement(){"
-      ,   "var img = $('#super > img');"
-      ,   "$(img).css({ maxWidth: $(window).width()"
-      ,              ", maxHeight: ($(window).height() - 30) });"
-      , "}"
-      , "$(document).ready(function(){ placement(); });"
-      , "$(window).resize(function() { placement(); });"
       ]
 
 compilePages :: SiteCfg -> [Page] -> IO()
