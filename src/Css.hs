@@ -225,6 +225,7 @@ maximize sc = let
       bottom (px 0)
     blurRadius = 50
   in do
+    div # "#super" ? overflow hidden
     div # "#reihe" ? display block
     div # "#spalte" ? toInvisible
     div # "#header" # hover ? div # "#spalte" ? toVisible
@@ -243,16 +244,16 @@ maximize sc = let
       zIndex 100
       backgroundPosition (placed sideCenter sideCenter)
       backgroundSize cover
-      "filter" -: (pack $ "blur(" ++ show blurRadius ++ "px)")
+      "filter" -: pack ("blur(" ++ show blurRadius ++ "px)")
     div # "#super" |> img ? do
       maxHeight (other "100%")
       maxWidth (other "100%")
-      marginLeft auto
-      marginRight auto
-      display (other "table")
-      position relative
+      fitMaximized
+      margin auto auto auto auto
+      verticalAlign middle
       zIndex 1000
-      boxShadow . pure $ bkColor `bsColor` (shadowWithSpread (px 0) (px 0) (px (5 * blurRadius)) (px (- blurRadius)))
+      boxShadow . pure $
+        bkColor `bsColor` shadowWithSpread (px 0) (px 0) (px (5 * blurRadius)) (px (- blurRadius))
     a # "#toleft" <> a # "#toright" ? do
       position absolute
       zIndex 5000

@@ -17,8 +17,7 @@ import           System.IO.Unsafe
 import qualified Data.Text as T
 
 import           Common
-import           Pages.Blog as X
-import           Pages.Gallery as X
+import           Gallery as X
 
 -------------------------------------------------------------------------------
 kontakt :: SiteCfg -> Page

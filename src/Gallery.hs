@@ -1,6 +1,6 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE OverloadedStrings #-}
-module Pages.Gallery
+module Gallery
   ( Gallery (G), FoldrAndImgs
   , readGal
   , genGal, faiToNav
@@ -11,6 +11,7 @@ import           Data.List
 import           Data.Char
 import           System.Directory
 import           System.FilePath
+import qualified Data.Text as T
 
 import           Text.Blaze.Internal
 import           Text.Blaze.Html5 hiding (html, param, map)
