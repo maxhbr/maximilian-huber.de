@@ -20,6 +20,9 @@ import qualified Text.Blaze.Html5.Attributes as A
 
 import           Common
 import           TemplateSystem
+import           Data.Digest.Pure.MD5 (hash', md5DigestBytes, MD5Digest)
+import           Data.ByteString.Char8 (pack)
+import           Debug.Trace (trace)
 
 data FoldrAndImgs = FAI { faiPath :: FilePath
                         , subFais :: [FoldrAndImgs]
@@ -34,11 +37,13 @@ data Gallery = G { galPath :: FilePath
  - read Gallery to list
  -}
 
+galerieDir = "galerie" :: String
+
 imageSort :: FilePath -> FilePath -> Ordering
 imageSort i1 i2 = compare (takeFileName i2) (takeFileName i1)
 
 readGal :: IO FoldrAndImgs
-readGal = getCurrentDirectory >>= (`readGal'` "galerie")
+readGal = getCurrentDirectory >>= (`readGal'` galerieDir)
   where
     readGal' :: FilePath -> FilePath -> IO FoldrAndImgs
     readGal' topdir curdir = let
@@ -84,15 +89,25 @@ genGal sc fai = do
     genGalPs :: Gallery -> [Page]
     genGalPs (G subdir l) = map (genGalP subdir (length l)) l
     genGalP :: FilePath -> Int -> (Int, FilePath) -> Page
-    genGalP subdir num (c,img) =
-        galleryPage { pPath  = paths
-                    , pTitle = Just $ subdir ++ "/" ++ show c
-                    , pCtn   = genHTML img
-                    , pLine  = Just line }
-      where paths = if' (c/=1) [ subdir </> (show c ++ ".html") ]
-                              [ subdir </> (show c ++ ".html")
-                              , subdir </> "index.html"
-                              , subdir ++ ".html" ]
+    genGalP subdir num (c,img) = let
+        imgType | "jpg" `isSuffixOf` img = "image/jpeg"
+                | "JPG" `isSuffixOf` img = "image/jpeg"
+                | "png" `isSuffixOf` img = "image/png"
+                | otherwise              = "image/jpeg"
+        social = Social (url sc </> img) imgType
+      in galleryPage { pPath   = paths
+                     , pTitle  = Just $ subdir ++ "/" ++ show c
+                     , pCtn    = genHTML img
+                     , pLine   = Just line
+                     , pSocial = Just social}
+      where permalink = (subdir </> ("plink" ++ ((show . (\p -> hash' p :: MD5Digest) . pack) img)))
+            paths = if' (c /= 1)
+                        [ subdir </> (show c ++ ".html")
+                        , permalink  ++ ".html" ]
+                        [ subdir </> (show c ++ ".html")
+                        , subdir </> "index.html"
+                        , subdir ++ ".html"
+                        , permalink ++ ".html" ]
 
             prevPage = stringValue $
               myTrimUrl sc $
@@ -113,6 +128,10 @@ genGal sc fai = do
                 a ! A.href nextPage $ ">")
               li " in "
               li $ toHtml subdir
+              li $
+                a ! A.href (stringValue (url sc </> permalink))
+                  ! A.class_ (stringValue "permalink")
+                  $ "(permalink)"
 
             genHTML img = do
               H.div ! A.id "imgBackgroundWrapper" $

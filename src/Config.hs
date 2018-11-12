@@ -31,11 +31,12 @@ scPre galNav = SC { statics  = ["css","galerie","images","scripts","styles"
                                ,"qr.jpg","qr_large.jpg"]
                   , url      = "http://maximilian-huber.de"
                   , outPath  = "_site"
-                  , defaultP = P { pPath  = []
-                                 , pTitle = Nothing
-                                 , pStyle = "text"
-                                 , pCtn   = mempty
-                                 , pNav   = genDefaultNav galNav
-                                 , pLine  = Nothing}
+                  , defaultP = P { pPath   = []
+                                 , pTitle  = Nothing
+                                 , pStyle  = "text"
+                                 , pCtn    = mempty
+                                 , pNav    = genDefaultNav galNav
+                                 , pLine   = Nothing
+                                 , pSocial = Nothing}
                   , indexP   = Just "galerie/index.html"}
 

@@ -5,7 +5,6 @@ module Css (genCss) where
 import           Prelude hiding (div,(**))
 import qualified Prelude as P
 import           Data.Monoid
--- import qualified Data.Text.Lazy    as L
 import qualified Data.Text.Lazy.IO as L
 import           Data.Text
 import           Clay hiding (url)
@@ -21,6 +20,11 @@ import           System.Directory
 import           Common
 
 cWidth = 960
+cHeight = 800
+
+wide = query M.screen [M.minWidth (px (cWidth +9))]
+tall = query M.screen [M.minHeight (px cHeight)]
+notTall = query M.screen [M.maxHeight (px cHeight)]
 
 bkColor  = "#333"    :: Color
 bkColor0 = bkColor
@@ -90,9 +94,7 @@ layout = do
     width (px 180)
     padding (px 10) (px 10) (px 10) (px 10)
     height auto
-    -- "border-bottom-right-radius" -: "15px"
-    -- "border-bottom-left-radius" -: "15px"
-    query M.screen [M.minWidth (px (cWidth +9))] $ do
+    wide $ do
       left (other "50%")
       marginLeft ((px (- cWidth)) @/ 2)
     img # "#logo" ? do
@@ -100,9 +102,6 @@ layout = do
       height auto
   -- ########################################################################
   ((div # "#reihe") <> (div # "#spalte")) ? do
-    {-background bkColor-}
-    {-borderRight solid (px 2) hiColor-}
-    {-borderBottom solid (px 2) hiColor-}
     position absolute
     zIndex 1000
   -- ########################################################################
@@ -113,7 +112,7 @@ layout = do
     bottom (px 0)
     width (px 200)
     padding (px 0) (px 0) (px 0) (px 0)
-    query M.screen [M.minWidth (px (cWidth +9))] $ do
+    wide $ do
       left (other "50%")
       marginLeft ((px (- cWidth)) @/ 2)
     query M.screen [M.minHeight (px 450)] (position fixed)
@@ -159,8 +158,6 @@ layout = do
         a ? width (px 120)
       ul # "#MenuUlGalerie" |> li ? float floatLeft
     ul # "#navigation" |> li # hover ? do
-      {-borderLeft solid (px 2) hiColor-}
-      {-marginLeft (px (-2))-}
       ul ? toVisible
       width (px 206)
     div # "#spalteFill1" ? do
@@ -177,9 +174,9 @@ layout = do
     lineHeight (px 30)
     display block
     background bkColor
-    query M.screen [M.minWidth (px (cWidth +9))] $ do
+    wide $ do
       left (other "50%")
-      marginLeft ((px (- cWidth)) @/ 2 @+@ (px 200))
+      marginLeft (px (- cWidth) @/ 2 @+@ px 200)
     query M.screen [M.minHeight (px 450)] (position fixed)
     display none
     li ? do
@@ -188,7 +185,7 @@ layout = do
 
 textCss :: Css
 textCss = div # "#super" ? do
-  query M.screen [M.minWidth (px (cWidth +9))] $ do
+  wide $ do
     width (px cWidth)
     left (other "50%")
     marginLeft ((px (- cWidth)) @/ 2)
@@ -217,12 +214,13 @@ textCss = div # "#super" ? do
 
 maximize :: SiteCfg -> Css
 maximize sc = let
-    fitMaximized = do
+    fitMaximizedWith v = do
       position absolute
-      top (px 0)
-      right (px 0)
-      left (px 0)
-      bottom (px 0)
+      top v
+      right v
+      left v
+      bottom v
+    fitMaximized = fitMaximizedWith (px 0)
     blurRadius = 50
   in do
     div # "#super" ? overflow hidden
@@ -246,11 +244,17 @@ maximize sc = let
       backgroundSize cover
       "filter" -: pack ("blur(" ++ show blurRadius ++ "px)")
     div # "#super" |> img ? do
-      maxHeight (other "100%")
-      maxWidth (other "100%")
-      fitMaximized
+      tall $  let
+          imgSpacing = 20
+        in do
+          maxHeight ((pct 100) @-@ (px (imgSpacing * 2)))
+          maxWidth ((pct 100) @-@ (px (imgSpacing * 2)))
+          fitMaximizedWith (px imgSpacing)
+      notTall $ do
+        maxHeight (pct 100)
+        maxWidth (pct 100)
+        fitMaximized
       margin auto auto auto auto
-      verticalAlign middle
       zIndex 1000
       boxShadow . pure $
         bkColor `bsColor` shadowWithSpread (px 0) (px 0) (px (5 * blurRadius)) (px (- blurRadius))
@@ -288,6 +292,7 @@ maximize sc = let
         backgroundPosition (placed sideRight sideCenter)
       div # ".inner" # hover ?
         backgroundImage (C.url (pack $ url sc </> "images/2arrow-r-active.png"))
+    a # ".permalink" ? fontSize (px 10)
 
 defaultCss sc = do
   general

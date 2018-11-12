@@ -12,15 +12,22 @@ data Nav = N { navTitle :: String         -- Title
              , subs :: [Nav]              -- SubNav
              }
 
+data Social = Social { socialImg :: String
+                     , socialImgType :: String
+                     -- , socialImgWidth :: Int
+                     -- , socialImgHeight :: Int
+                     }
+
 data Page = P { pPath :: [FilePath]       -- urls/filenames
               , pTitle :: Maybe String    -- title
               , pStyle :: String          -- class
               , pCtn :: Html              -- content
               , pNav :: Nav               -- Navigation
               , pLine :: Maybe Html       -- Second nav
+              , pSocial :: Maybe Social    -- social img for sharing
               }
 
-data SiteCfg = SC { statics :: [FilePath] -- static fieles
+data SiteCfg = SC { statics :: [FilePath] -- static files
                   , url :: String
                   , outPath :: FilePath
                   , defaultP :: Page

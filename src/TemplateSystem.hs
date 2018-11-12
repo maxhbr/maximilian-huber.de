@@ -28,43 +28,65 @@ compilePage sc s =
     mapM_ putToFile (pPath s)
   where putToFile f = L.writeFile (outPath sc </> f) $
           renderHtml $ do
-            theHead sc s
-            body! A.class_ (stringValue (pStyle s)) $ do
-              -- Content:
-              H.div ! A.id "super" $
-                if pStyle s == "text"
-                  then H.div ! A.id "content" $ pCtn s
-                  else                          pCtn s
-              theHeader sc s
-              script ! A.type_ "text/javascript"
-                     ! A.src "http://code.jquery.com/jquery-latest.js" $ " "
+            docType
+            H.html $ do
+              theHead sc s
+              body! A.class_ (stringValue (pStyle s)) $ do
+                -- Content:
+                H.div ! A.id "super" $
+                  if pStyle s == "text"
+                    then H.div ! A.id "content" $ pCtn s
+                    else                          pCtn s
+                theHeader sc s
+                script ! A.type_ "text/javascript"
+                       ! A.src "http://code.jquery.com/jquery-latest.js" $ " "
 
-              when (pStyle s == "maximize") keyMove
+                when (pStyle s == "maximize") keyMove
 
 compilePage' :: SiteCfg -> (SiteCfg -> Page) -> IO()
 compilePage' sc s = compilePage sc $ s sc
 
+headLogo :: SiteCfg -> AttributeValue
+headLogo sc = stringValue (url sc </> "images/logo-dark2.png")
+
 theHead :: SiteCfg -> Page -> Html
-theHead sc s = H.head $ do
-  meta ! A.httpEquiv "Content-Type" ! A.content "text/html; charset=UTF-8"
-  case pTitle s of
-    Nothing    -> H.title "Maximilian-Huber.de"
-    Just t -> H.title (toHtml $ "Maximilian-Huber.de | " ++ t)
-  link ! A.rel "shortcut icon"
-       ! A.type_ "image/x-icon"
-       ! A.href (stringValue $ myTrimUrl sc $ url sc </> "favicon.ico")
-  forM_ ["css/reset.css","css/font.css","css/default.css"]
-    (\css -> link ! A.rel "stylesheet"
-                 ! A.type_ "text/css"
-                 ! A.href (stringValue $ url sc </> css))
+theHead sc s = let
+    sharingTags = do
+      meta ! A.httpEquiv "og:title" ! A.content "Maximilian-Huber.de"
+      meta ! A.httpEquiv "og:type" ! A.content "website"
+      case pTitle s of
+        Just t -> meta ! A.httpEquiv "og:description" ! A.content (stringValue t)
+        _      -> pure ()
+      -- meta ! A.httpEquiv "og:url" ! A.content "..."
+      case (pSocial s) of
+        Just (Social img imgType) -> do
+          meta ! A.httpEquiv "og:image" ! A.content (stringValue img)
+          meta ! A.httpEquiv "og:image:type" ! A.content (stringValue imgType)
+          -- meta ! A.httpEquiv "og:image:width" ! A.content "..."
+          -- meta ! A.httpEquiv "og:image:height" ! A.content "..."
+        _ -> do
+          meta ! A.httpEquiv "og:image" ! A.content (headLogo sc)
+          meta ! A.httpEquiv "og:image:type" ! A.content "image/png"
+  in H.head $ do
+    meta ! A.httpEquiv "Content-Type" ! A.content "text/html; charset=UTF-8"
+    case pTitle s of
+      Nothing    -> H.title "Maximilian-Huber.de"
+      Just t -> H.title (toHtml $ "Maximilian-Huber.de | " ++ t)
+    link ! A.rel "shortcut icon"
+         ! A.type_ "image/x-icon"
+         ! A.href (stringValue $ myTrimUrl sc $ url sc </> "favicon.ico")
+    forM_ ["css/reset.css","css/font.css","css/default.css"]
+      (\css -> link ! A.rel "stylesheet"
+                    ! A.type_ "text/css"
+                    ! A.href (stringValue $ url sc </> css))
+    sharingTags
 
 theHeader :: SiteCfg -> Page -> Html
 theHeader sc s = H.div ! A.id "header" $ do
   H.div ! A.id "logoWrapper" $
-    -- a ! A.href (stringValue $ url sc) $
-      img ! A.src (stringValue ( url sc </> "images/logo-dark2.png"))
-          ! A.alt "maximilian-huber.de"
-          ! A.id "logo"
+    img ! A.src (headLogo sc)
+        ! A.alt "maximilian-huber.de"
+        ! A.id "logo"
   H.div ! A.id "spalte" $ do
     H.div ! A.id "spalteFill1" $ ""
     -- Navigation:
@@ -108,7 +130,7 @@ genNavigation sc s = ul ! A.class_ "MenuUl0"
                         && dropFileName p `elem` map dropFileName ps)
           where isActive' :: String -> Int
                 isActive' []    = 0
-                isActive' (h:t) | h == '/'   = isActive' t + 1
+                isActive' (h:t) | h == '/'  = isActive' t + 1
                                 | otherwise = isActive' t
 
 keyMove :: Html
