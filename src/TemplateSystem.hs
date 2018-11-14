@@ -75,7 +75,7 @@ theHead sc s = let
     link ! A.rel "shortcut icon"
          ! A.type_ "image/x-icon"
          ! A.href (stringValue $ myTrimUrl sc $ url sc </> "favicon.ico")
-    forM_ ["css/reset.css","css/font.css","css/default.css"]
+    forM_ ["css/reset.css","css/default.css"]
       (\css -> link ! A.rel "stylesheet"
                     ! A.type_ "text/css"
                     ! A.href (stringValue $ url sc </> css))
