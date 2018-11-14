@@ -58,3 +58,5 @@ for item in $mirrorfiles; do
         rm    "$MIRROR/$item"
     fi
 done
+
+fusermount -u /media/ftp
