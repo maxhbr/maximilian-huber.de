@@ -79,7 +79,7 @@ genGal sc fai = do
     flattenFais :: FoldrAndImgs -> [Gallery]
     flattenFais (FAI p fais is) = G p (zip [1..] is) : concatMap flattenFais fais
 
-    galleryPage = (defaultP sc) { pStyle = "maximize" }
+    galleryPage = (defaultP sc) { pStyle = Maximize }
 
     genGalDirs (G subdir _) = do
       ex <- doesDirectoryExist path

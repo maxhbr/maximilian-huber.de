@@ -19,9 +19,3 @@ a img { border:none }
 [hidden] { display: none; }
 audio, canvas, video { display: inline-block; }
 article, aside, details, figcaption, figure, footer, header, hgroup, nav, section, summary { display: block; }
-
-@import url("font.css");
-body {
-    font-family: "Decker", "Helvetica", sans-serif;
-    font-size: 16px;
-}

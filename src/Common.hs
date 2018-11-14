@@ -7,6 +7,9 @@ import           Data.List
 --------------------------------------------------------------------------------
 --  Data definitions
 
+data PStyle = Maximize | TextStyle
+  deriving (Show, Eq)
+
 data Nav = N { navTitle :: String         -- Title
              , navPath :: Maybe FilePath  -- Adress
              , subs :: [Nav]              -- SubNav
@@ -20,7 +23,7 @@ data Social = Social { socialImg :: String
 
 data Page = P { pPath :: [FilePath]       -- urls/filenames
               , pTitle :: Maybe String    -- title
-              , pStyle :: String          -- class
+              , pStyle :: PStyle          -- class
               , pCtn :: Html              -- content
               , pNav :: Nav               -- Navigation
               , pLine :: Maybe Html       -- Second nav

@@ -37,8 +37,8 @@ hoColor  = "#fff"    :: Color
 toInvisible = do
   visibility hidden
   opacity 0
-  transitions [("visibility",T.sec 0,  linear,T.sec 0.2)
-              ,("opacity",   T.sec 0.2,linear,T.sec 0.0)]
+  transitions [ ("visibility",T.sec 0,  linear,T.sec 0.2)
+              , ("opacity",   T.sec 0.2,linear,T.sec 0.0) ]
 toVisible = do
   visibility visible
   opacity 1
@@ -49,6 +49,7 @@ general = do
   body ? do
     background bkColor2
     color fgColor
+    fontSize (px 16)
   h1 ? fontSize (px 24)
   h2 ? fontSize (px 20)
   a ? do
@@ -57,7 +58,7 @@ general = do
     textDecoration none
   a # hover ? color hoColor
   div # "#footer" ? do
-    width (other "100%")
+    width (pct 100)
     "text-align" -: "right"
     position relative
     top (px 15)
@@ -95,10 +96,10 @@ layout = do
     padding (px 10) (px 10) (px 10) (px 10)
     height auto
     wide $ do
-      left (other "50%")
-      marginLeft ((px (- cWidth)) @/ 2)
+      left (pct 50)
+      marginLeft (px (- cWidth) @/ 2)
     img # "#logo" ? do
-      width (other "100%")
+      width (pct 100)
       height auto
   -- ########################################################################
   ((div # "#reihe") <> (div # "#spalte")) ? do
@@ -113,8 +114,8 @@ layout = do
     width (px 200)
     padding (px 0) (px 0) (px 0) (px 0)
     wide $ do
-      left (other "50%")
-      marginLeft ((px (- cWidth)) @/ 2)
+      left (pct 50)
+      marginLeft (px (- cWidth) @/ 2)
     query M.screen [M.minHeight (px 450)] (position fixed)
     (ul # "#navigation" |> li) <> (div # "#spalteFill2") ? marginTop (px 10)
     (ul # "#navigation" |> li)
@@ -136,7 +137,7 @@ layout = do
       a <> Clay.span ? do
         display block
         width (px 170)
-        height (other "100%")
+        height (pct 100)
         padding (px 0) (px 0) (px 0) (px 30)
       ul # ".submenu0" ? do
         toInvisible
@@ -163,7 +164,7 @@ layout = do
     div # "#spalteFill1" ? do
       height (px 200)
       query M.screen [M.minHeight (px 600)] (height (px 300))
-    div # "#spalteFill2" ? height (other "100%")
+    div # "#spalteFill2" ? height (pct 100)
     ul # "#navigation" ? li # ".active" ? a ? color hiColor
     ul # "#navigation" ? li # ".active" ? a # hover? color white
   -- ########################################################################
@@ -175,7 +176,7 @@ layout = do
     display block
     background bkColor
     wide $ do
-      left (other "50%")
+      left (pct 50)
       marginLeft (px (- cWidth) @/ 2 @+@ px 200)
     query M.screen [M.minHeight (px 450)] (position fixed)
     display none
@@ -187,8 +188,8 @@ textCss :: Css
 textCss = div # "#super" ? do
   wide $ do
     width (px cWidth)
-    left (other "50%")
-    marginLeft ((px (- cWidth)) @/ 2)
+    left (pct 50)
+    marginLeft (px (- cWidth) @/ 2)
   div # "#content" ? do
     background bkColor1
     position absolute
@@ -206,10 +207,10 @@ textCss = div # "#super" ? do
     h1 ? paddingBottom (px 50)
     div # ".spacer" ? do
       display block
-      width (other "100%")
+      width (pct 100)
       height (px 10)
       padding (px 0) (px 30) (px 0) (px 30)
-      margin (px 20) 0 (px 20) (other "-30px")
+      margin (px 20) 0 (px 20) (px (-30))
       background bkColor2
 
 maximize :: SiteCfg -> Css
@@ -247,8 +248,8 @@ maximize sc = let
       tall $  let
           imgSpacing = 20
         in do
-          maxHeight ((pct 100) @-@ (px (imgSpacing * 2)))
-          maxWidth ((pct 100) @-@ (px (imgSpacing * 2)))
+          maxHeight (pct 100 @-@ px (imgSpacing * 2))
+          maxWidth (pct 100 @-@ px (imgSpacing * 2))
           fitMaximizedWith (px imgSpacing)
       notTall $ do
         maxHeight (pct 100)
@@ -302,9 +303,9 @@ defaultCss sc = do
     top (px 30)
     left (px 0)
     right (px 0)
-  body # ".text" ? do
+  body # ("." ++ show TextStyle) ? do
     textCss
-  body # ".maximize" ? maximize sc
+  body # ("." ++ show Maximize) ? maximize sc
 
 -- mobileCss sc = do
 --   ((div # "#logoWrapper") <> (div # "#spalte") <> (div # "#reihe")) ? do
@@ -327,4 +328,4 @@ genCss sc = do
     --   if "http" `Li.isPrefixOf` url sc
     --     then render                $ mobileCss sc
     --     else renderWith compact [] $ mobileCss sc
-    print "css done"
+    putStrLn "css done"
