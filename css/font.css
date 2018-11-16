@@ -1,13 +1,5 @@
-/*@import url(http://fonts.googleapis.com/css?family=Lato:300,400,700);*/
-@font-face {font-family:"DejaVu Sans";
-    src:url("font/DejaVuSans.eot?") format("eot")
-    ,url("font/DejaVuSans.woff") format("woff")
-    ,url("font/DejaVuSans.ttf") format("truetype")
-    ,url("font/DejaVuSans.svg#DejaVuSans") format("svg");
-    font-weight:normal;
-    font-style:normal;
-}
-@font-face {font-family:"Decker";
+@font-face {
+    font-family:"Decker";
     src:url("font/Decker.eot?") format("eot")
     ,url("font/Decker.woff") format("woff")
     ,url("font/Decker.ttf") format("truetype")
@@ -16,7 +8,13 @@
     font-style:normal;
 }
 
+
+@font-face {
+    font-family: "GlacialIndifference";
+    src: url("font/GlacialIndifference-Regular.otf") format("opentype");
+}
+
 body {
-    font-family: "Decker", "Helvetica", sans-serif;
+    font-family: "GlacialIndifference", "Helvetica", sans-serif;
 }
 

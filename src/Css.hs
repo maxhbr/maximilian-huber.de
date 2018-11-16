@@ -80,7 +80,6 @@ layout = do
     zIndex 10000
   -- ########################################################################
   div # "#reihe" ? do
-    {-display none-}
     left (px 200)
     top (px 0)
     height (px 30)
@@ -295,6 +294,7 @@ maximize sc = let
         backgroundImage (C.url (pack $ url sc </> "images/2arrow-r-active.png"))
     a # ".permalink" ? fontSize (px 10)
 
+defaultCss :: SiteCfg -> Css
 defaultCss sc = do
   general
   layout
@@ -303,9 +303,8 @@ defaultCss sc = do
     top (px 30)
     left (px 0)
     right (px 0)
-  body # ("." ++ show TextStyle) ? do
-    textCss
-  body # ("." ++ show Maximize) ? maximize sc
+  body # byClass (pack $ show TextStyle) ? textCss
+  body # byClass (pack $ show Maximize) ? maximize sc
 
 -- mobileCss sc = do
 --   ((div # "#logoWrapper") <> (div # "#spalte") <> (div # "#reihe")) ? do
@@ -318,8 +317,8 @@ defaultCss sc = do
 
 genCss :: SiteCfg -> IO ()
 genCss sc = do
-    ex <- doesDirectoryExist (outPath sc </> "css")
-    unless ex (createDirectoryIfMissing True (outPath sc </> "css"))
+    existsOutCSS <- doesDirectoryExist (outPath sc </> "css")
+    unless existsOutCSS (createDirectoryIfMissing True (outPath sc </> "css"))
     L.writeFile (outPath sc </> "css/default.css") $
       if myTst sc
         then renderWith compact [] $ defaultCss sc
