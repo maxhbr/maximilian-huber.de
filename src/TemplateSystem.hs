@@ -39,7 +39,7 @@ compilePage sc s =
                     else                          pCtn s
                 theHeader sc s
                 script ! A.type_ "text/javascript"
-                       ! A.src "http://code.jquery.com/jquery-latest.js" $ " "
+                       ! A.src "https://code.jquery.com/jquery-latest.js" $ " "
 
                 when (pStyle s == Maximize) keyMove
 

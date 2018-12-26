@@ -29,7 +29,7 @@ genDefaultNav galNav = N { navTitle = "Home"
 scPre galNav = SC { statics  = ["css","galerie","images","scripts"
                                ,"gpg-pubkey.asc","favicon.ico"
                                ,"qr.jpg","qr_large.jpg"]
-                  , url      = "http://maximilian-huber.de"
+                  , url      = "https://maximilian-huber.de"
                   , outPath  = "_site"
                   , defaultP = P { pPath   = []
                                  , pTitle  = Nothing
