@@ -27,7 +27,7 @@ fi
 mkdir -p "$MIRROR"
 
 # make dirs
-mydirs=$(cd "$INPUT"; find . \( ! -regex '.*/\..*' \) -type d)
+mydirs=$(cd "$INPUT"; find . \( ! -regex '.*/\..*' \) -type d | sort)
 for item in $mydirs ; do
     if [[ -d "$MIRROR/$item" ]]; then
         continue
@@ -37,7 +37,7 @@ for item in $mydirs ; do
 done
 
 # copy files
-myfiles=$(cd "$INPUT"; find . \( ! -regex '.*/\..*' \) -type f)
+myfiles=$(cd "$INPUT"; find . \( ! -regex '.*/\..*' \) -type f | sort -r)
 for item in $myfiles; do
     if [ -f "$MIRROR$item" ]; then
         a=$(md5sum "$INPUT/$item" | awk '{print $1}')

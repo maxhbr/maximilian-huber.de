@@ -67,6 +67,10 @@ theHead sc s = let
         _ -> do
           meta ! A.httpEquiv "og:image" ! A.content (headLogo sc)
           meta ! A.httpEquiv "og:image:type" ! A.content "image/png"
+    tryToMakeFullscreen = do
+      meta ! A.httpEquiv "apple-mobile-web-app-capable" ! A.content "yes"
+      meta ! A.httpEquiv "viewport" ! A.content "width=device-width, initial-scale=1.0"
+      meta ! A.httpEquiv "mobile-web-app-capable" ! A.content "yes"
   in H.head $ do
     meta ! A.httpEquiv "Content-Type" ! A.content "text/html; charset=UTF-8"
     case pTitle s of
@@ -82,6 +86,7 @@ theHead sc s = let
                     ! A.type_ "text/css"
                     ! A.href (stringValue $ url sc </> css))
     sharingTags
+    tryToMakeFullscreen
 
 theHeader :: SiteCfg -> Page -> Html
 theHeader sc s = H.div ! A.id "header" $ do
