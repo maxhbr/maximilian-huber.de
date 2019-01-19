@@ -119,7 +119,7 @@ layout = do
     (ul # "#navigation" |> li) <> (div # "#spalteFill2") ? marginTop (px 10)
     (ul # "#navigation" |> li)
       <> (div # "#spalteFill1")
-      <> (div # "#spalteFill2") ?  width (px 200)
+      <> (div # "#spalteFill2") ? width (px 200)
     (ul # "#navigation" |> li)
       <> (div # "#spalteFill1")
       <> (div # "#spalteFill2")
@@ -157,7 +157,7 @@ layout = do
           li ? a ?  fontWeight normal
         a ? width (px 120)
       ul # "#MenuUlGalerie" |> li ? float floatLeft
-    ul # "#navigation" |> li # hover ? do
+    ul # "#navigation" |> ((li # hover) <> (li # focus)) ? do
       ul ? toVisible
       width (px 206)
     div # "#spalteFill1" ? do
@@ -165,7 +165,7 @@ layout = do
       query M.screen [M.minHeight (px 600)] (height (px 300))
     div # "#spalteFill2" ? height (pct 100)
     ul # "#navigation" ? li # ".active" ? a ? color hiColor
-    ul # "#navigation" ? li # ".active" ? a # hover? color white
+    ul # "#navigation" ? li # ".active" ? a # hover ? color white
   -- ########################################################################
   div # "#reihe" ? do
     top (px 0)
@@ -226,8 +226,11 @@ maximize sc = let
     div # "#super" ? overflow hidden
     div # "#reihe" ? display block
     div # "#spalte" ? toInvisible
-    div # "#header" # hover ? div # "#spalte" ? toVisible
-    (div # "#super") <> (div # "#imageOverlay") ?  bottom (px 0)
+    ((div # "#header" # hover) <> (div # "#header" # focus)) ?
+      div # "#spalte" ?
+      toVisible
+    (div # "#super") <> (div # "#imageOverlay") ?
+      bottom (px 0)
     (div # "#imageOverlay") ? do
       fitMaximized
       zIndex 1010
@@ -272,8 +275,8 @@ maximize sc = let
         width (px 100)
         transitions [("opacity",T.sec 0.25,easeOut,T.sec 0.0)]
         opacity 0.3
-      div # ".inner" # hover ?
-        opacity 1
+      ((div # ".inner" # hover) <> (div # ".inner" # focus)) ?
+        toVisible
     a # "#toleft" ? do
       left (px 0)
       width (px 100)
