@@ -62,126 +62,95 @@ general = do
     "text-align" -: "right"
     position relative
     top (px 15)
-  div # ".infinitem0" ? do
-    display block
-    width (px 0)
-    height (px 0)
 
-layout :: Css
-layout = do
-  -- ########################################################################
-  div # "#header" ? do
-    position fixed
-    left (px 0)
-    top (px 0)
-    right (px 0)
-    height (px 30)
-    background bkColor
-    zIndex 10000
-  -- ########################################################################
-  div # "#reihe" ? do
-    left (px 200)
-    top (px 0)
-    height (px 30)
-    paddingRight (px 30)
-  -- ########################################################################
-  div # "#logoWrapper" ? do
-    background bkColor
-    position absolute
-    zIndex 10000
-    left (px 0)
-    top (px 0)
-    width (px 180)
-    padding (px 10) (px 10) (px 10) (px 10)
-    height auto
-    wide $ do
-      left (pct 50)
-      marginLeft (px (- cWidth) @/ 2)
-    img # "#logo" ? do
-      width (pct 100)
-      height auto
-  -- ########################################################################
-  ((div # "#reihe") <> (div # "#spalte")) ? do
-    position absolute
-    zIndex 1000
-  -- ########################################################################
-  div # "#spalte" ? do
+headerCss :: Css
+headerCss = div # "#header" ? do
+  position fixed
+  left (px 0)
+  top (px 0)
+  right (px 0)
+  background bkColor
+  zIndex 10000
+  overflow visible
+  input # "#menuToggle" ?
+    display none
+  input # "#menuToggle" # checked |+ menu # "#menu" ? do
+    -- Todo: transition
     display block
-    left (px 0)
-    top (px 0)
-    bottom (px 0)
-    width (px 200)
-    padding (px 0) (px 0) (px 0) (px 0)
-    wide $ do
-      left (pct 50)
-      marginLeft (px (- cWidth) @/ 2)
-    query M.screen [M.minHeight (px 450)] (position fixed)
-    (ul # "#navigation" |> li) <> (div # "#spalteFill2") ? marginTop (px 10)
-    (ul # "#navigation" |> li)
-      <> (div # "#spalteFill1")
-      <> (div # "#spalteFill2") ? width (px 200)
-    (ul # "#navigation" |> li)
-      <> (div # "#spalteFill1")
-      <> (div # "#spalteFill2")
-      <> (ul # ".MenuUlGalerie" |> li)
-      <> (ul # ".submenu0" |> li) ? do
-        display block
-        background bkColor
+    -- transitions [ ("visibility",T.sec 0,  linear,T.sec 0.2)
+    --             , ("opacity",   T.sec 0.2,linear,T.sec 0.0) ]
+  menu # "#menu" ? do
+    display none
+    clear both
+    maxWidth (px 960)
+    sym2 margin (px 0) auto
+    borderBottom solid (px 3) hiColor
+    ((li # ".MenuLi0") <> (ul # "#MenuUlGalerie" |> li # ".MenuLi1")) ?
+      float floatLeft
+    ul ? do
+      padding (px 0) (px 0) (px 0) (px 30)
+      "display" -: "flow-root"
     ul # "#navigation" ? li ? do
       position relative
       "vertical-align" -: "middle"
       lineHeight (px 30)
     ul # "#navigation" |> li ? do
-      height (px 30)
+      minHeight (px 30)
       a <> Clay.span ? do
         display block
-        width (px 170)
-        height (pct 100)
+        minWidth (px 80)
+        minHeight (pct 100)
         padding (px 0) (px 0) (px 0) (px 30)
-      ul # ".submenu0" ? do
-        toInvisible
-        position absolute
-        left (px 205)
-        top (px (-10))
-        paddingTop (px 10)
-        paddingBottom (px 10)
-        background bkColor
-      ul # ".submenu0" ? width (px 150)
-      ul # "#MenuUlGalerie" ? do
-        width (px 450)
-        query M.screen [M.maxWidth (px 659)] (do
-          width (px 300)
-          query M.screen [M.maxWidth (px 509)] (width (px 150)))
-        li ? do
-          width (px 150)
-          li ? a ?  fontWeight normal
-        a ? width (px 120)
-      ul # "#MenuUlGalerie" |> li ? float floatLeft
-    ul # "#navigation" |> ((li # hover) <> (li # focus)) ? do
-      ul ? toVisible
-      width (px 206)
-    div # "#spalteFill1" ? do
-      height (px 200)
-      query M.screen [M.minHeight (px 600)] (height (px 300))
-    div # "#spalteFill2" ? height (pct 100)
-    ul # "#navigation" ? li # ".active" ? a ? color hiColor
-    ul # "#navigation" ? li # ".active" ? a # hover ? color white
-  -- ########################################################################
-  div # "#reihe" ? do
-    top (px 0)
-    left (px 200)
-    paddingLeft (px 30)
-    lineHeight (px 30)
-    display block
-    background bkColor
-    wide $ do
-      left (pct 50)
-      marginLeft (px (- cWidth) @/ 2 @+@ px 200)
-    query M.screen [M.minHeight (px 450)] (position fixed)
-    display none
-    li ? do
+      ul # ".submenu0" ?
+        minWidth (px 150)
+    ul # "#navigation" ?
+      li # ".active" ?
+      a ?
+      color hiColor
+    ul # "#navigation" ?
+      li # ".active" ?
+      a # hover ?
+      color white
+  (div # "#lowerHeader") ? do
+    overflow visible
+    display flex
+    maxWidth (px 960)
+    sym2 margin (px 0) auto
+    height (px 30)
+    div # "#logoWrapper" ? do
+      background bkColor
       float floatLeft
-      marginRight (px 5)
+      zIndex 10000
+      width (px 180)
+      sym padding (px 5)
+      img # "#logo" ?
+        width (pct 100)
+    ((div # "#menuToggleDiv") <> (div # "#reihe") <> label) ? do
+      float floatLeft
+      lineHeight (px 30)
+      margin (px 0) (px 0) (px 0) (px 30)
+    div # "#menuToggleDiv" ? do
+      position relative
+      Clay.span ?
+        paddingLeft (em 1.25)
+    div
+      # "#menuToggleDiv" ?
+      Clay.span # before ? do
+      "content" -: "\"\""
+      position absolute
+      top (em 0.6)
+      left (px 0)
+      width (em 1)
+      height (em 0.125)
+      borderTop double (em 0.375) fgColor
+      borderBottom solid (em 0.125) fgColor
+    label ?
+      cursor pointer
+    div # "#reihe" ? do
+      a # ".permalink" ? fontSize (px 10)
+      li ? do
+        float floatLeft
+        marginRight (px 5)
 
 textCss :: Css
 textCss = div # "#super" ? do
@@ -225,10 +194,7 @@ maximize sc = let
   in do
     div # "#super" ? overflow hidden
     div # "#reihe" ? display block
-    div # "#spalte" ? toInvisible
-    ((div # "#header" # hover) <> (div # "#header" # focus)) ?
-      div # "#spalte" ?
-      toVisible
+    -- div # "#spalte" ? toInvisible
     (div # "#super") <> (div # "#imageOverlay") ?
       bottom (px 0)
     (div # "#imageOverlay") ? do
@@ -275,7 +241,7 @@ maximize sc = let
         width (px 100)
         transitions [("opacity",T.sec 0.25,easeOut,T.sec 0.0)]
         opacity 0.3
-      ((div # ".inner" # hover) <> (div # ".inner" # focus)) ?
+      div # ".inner" # hover ?
         toVisible
     a # "#toleft" ? do
       left (px 0)
@@ -295,12 +261,11 @@ maximize sc = let
         backgroundPosition (placed sideRight sideCenter)
       div # ".inner" # hover ?
         backgroundImage (C.url (pack $ url sc </> "images/2arrow-r-active.png"))
-    a # ".permalink" ? fontSize (px 10)
 
 defaultCss :: SiteCfg -> Css
 defaultCss sc = do
   general
-  layout
+  headerCss
   div # "#super" ? do
     position absolute
     top (px 30)

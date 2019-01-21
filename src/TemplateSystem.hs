@@ -90,22 +90,26 @@ theHead sc s = let
 
 theHeader :: SiteCfg -> Page -> Html
 theHeader sc s = H.div ! A.id "header" $ do
-  H.div ! A.id "logoWrapper" $
-    img ! A.src (headLogo sc)
-        ! A.alt "maximilian-huber.de"
-        ! A.id "logo"
-  H.div ! A.id "spalte" $ do
-    H.div ! A.id "spalteFill1" $ ""
-    -- Navigation:
+  H.input ! A.type_ "checkbox"
+          ! A.id "menuToggle"
+  H.menu ! A.id "menu" $
     genNavigation sc s
-    H.div ! A.id "spalteFill2" $ ""
-  F.forM_ (pLine s) (H.div ! A.id "reihe")
+  H.div ! A.id "lowerHeader" $ do
+    H.label ! A.for "menuToggle"$ do
+      H.div ! A.id "logoWrapper" $
+        img ! A.src (headLogo sc)
+            ! A.alt "maximilian-huber.de"
+            ! A.id "logo"
+      H.div  ! A.id "menuToggleDiv" $
+        H.span $
+        "Menu"
+    F.forM_ (pLine s) (H.div ! A.id "reihe")
 
 genNavigation :: SiteCfg -> Page -> Html
 genNavigation sc s = ul ! A.class_ "MenuUl0"
                         ! A.id "navigation" $
-    forM_ (subs $ pNav s) (`genNavigation''` 0)
-  where genNavigation'' nav lvl =
+    forM_ (subs $ pNav s) (`genNavigation'` 0)
+  where genNavigation' nav lvl =
           li ! A.class_
                  (stringValue $
                    "MenuLi" ++ show lvl ++
@@ -122,19 +126,18 @@ genNavigation sc s = ul ! A.class_ "MenuUl0"
                 a ! A.class_ (stringValue $ "MenuLi" ++ show lvl)
                   ! A.id (stringValue $ "MenuA" ++ navTitle nav)
                   ! A.href (stringValue $
-                    if' (not ("http" `isPrefixOf` path))
-                        (myTrimUrl sc $ url sc </> path)
-                        path) $
+                            if' (not ("http" `isPrefixOf` path))
+                            (myTrimUrl sc $ url sc </> path)
+                            path) $
                       toHtml $
                         navTitle nav
             unless (Prelude.null (subs nav))
-                   (H.div ! A.class_ (stringValue $ "infinitem" ++ show lvl) $
-                      ul ! A.class_ (stringValue $ "submenu" ++ show lvl)
-                         ! A.id (stringValue $ "MenuUl" ++ navTitle nav) $
-                           forM_ (subs nav) (`genNavigation''` (lvl + 1)))
+                   (ul ! A.class_ (stringValue $ "submenu" ++ show lvl)
+                       ! A.id (stringValue $ "MenuUl" ++ navTitle nav) $
+                         forM_ (subs nav) (`genNavigation'` (lvl + 1)))
         isActive p ps = p `elem` ps
-                      || ( isActive' p > 0
-                        && dropFileName p `elem` map dropFileName ps)
+                        || ( isActive' p > 0
+                             && dropFileName p `elem` map dropFileName ps)
           where isActive' :: String -> Int
                 isActive' []    = 0
                 isActive' (h:t) | h == '/'  = isActive' t + 1
