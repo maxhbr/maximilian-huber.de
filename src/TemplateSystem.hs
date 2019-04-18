@@ -101,8 +101,7 @@ theHeader sc s = H.div ! A.id "header" $ do
             ! A.alt "maximilian-huber.de"
             ! A.id "logo"
       H.div  ! A.id "menuToggleDiv" $
-        H.span $
-        "Menu"
+        H.span "Menu"
     F.forM_ (pLine s) (H.div ! A.id "reihe")
 
 genNavigation :: SiteCfg -> Page -> Html

@@ -4,6 +4,13 @@ set -e
 
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $ROOT
+INPUT="$ROOT/_site/"
+MIRROR="$ROOT/_site-ftp-mirror/"
+TARGET="/media/ftp/maximilian-huber.de"
+
+if [[ ! -d "$TARGET" ]]; then
+    mountFTP.sh
+fi
 
 ~/Bilder/00-galerie/updateFiles.sh "$ROOT/galerie"
 stack build
@@ -11,12 +18,6 @@ stack exec build
 
 ################################################################################
 # update Files
-INPUT="$ROOT/_site/"
-MIRROR="$ROOT/_site-ftp-mirror/"
-TARGET="/media/ftp/maximilian-huber.de"
-if [[ ! -d "$TARGET" ]]; then
-    mountFTP.sh
-fi
 
 echo "update files ..."
 
