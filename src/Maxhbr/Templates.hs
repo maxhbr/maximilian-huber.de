@@ -1,0 +1,2 @@
+module Maxhbr.Templates
+  where
