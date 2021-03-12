@@ -2,6 +2,8 @@
 
 set -e
 
+umask 022
+
 ROOT="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $ROOT
 INPUT="$ROOT/_site/"
@@ -9,7 +11,7 @@ MIRROR="$ROOT/_site-ftp-mirror/"
 TARGET="/media/ftp/maximilian-huber.de"
 
 if [[ ! -d "$TARGET" ]]; then
-    mountFTP.sh
+    ~/bin/mountFTP.sh
 fi
 
 ~/Bilder/00-galerie/updateFiles.sh "$ROOT/galerie"
