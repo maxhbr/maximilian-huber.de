@@ -84,7 +84,7 @@ headerCss = div # "#header" ? do
     clear both
     maxWidth (px 960)
     sym2 margin (px 0) auto
-    borderBottom solid (px 3) hiColor
+    borderBottom (px 3) solid hiColor
     ((li # ".MenuLi0") <> (ul # "#MenuUlGalerie" |> li # ".MenuLi1")) ?
       float floatLeft
     ul ? do
@@ -142,8 +142,8 @@ headerCss = div # "#header" ? do
       left (px 0)
       width (em 1)
       height (em 0.125)
-      borderTop double (em 0.375) fgColor
-      borderBottom solid (em 0.125) fgColor
+      borderTop (em 0.375) double fgColor
+      borderBottom (em 0.125) solid fgColor
     label ?
       cursor pointer
     div # "#reihe" ? do

@@ -14,7 +14,7 @@ if [[ ! -d "$TARGET" ]]; then
     ~/bin/mountFTP.sh
 fi
 
-~/Bilder/00-galerie/updateFiles.sh "$ROOT/galerie"
+~/MINE/Bilder/00-galerie/updateFiles.sh "$ROOT/galerie"
 stack build
 stack exec build
 
