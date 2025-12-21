@@ -55,7 +55,6 @@ if [[ ! -d "$TARGET" ]]; then
     ~/bin/mountFTP.sh
 fi
 
-~/MINE/Bilder/00-galerie/updateFiles.sh "$ROOT/galerie"
 ${self.packages.${system}.default}/bin/update
 
 ################################################################################
