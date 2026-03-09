@@ -1,0 +1,232 @@
+:root {
+    --sidebar-width: 240px;
+    --sidebar-height: 160px;
+}
+
+body {
+    background: #555555;
+    color: #bbbbbb;
+    font-size: 16px;
+    display: flex
+}
+
+h1 {
+    font-size: 24px
+}
+
+h2 {
+    font-size: 20px
+}
+
+a {
+    color: #bbbbbb;
+    font-weight: bold;
+    text-decoration: none
+}
+
+a:hover {
+    color: #ffffff
+}
+
+div#footer {
+    width: 100%;
+    text-align: right;
+    position: relative;
+    top: 15px
+}
+
+div#header {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    bottom: 0px;
+    width: var(--sidebar-width);
+    background: #333333;
+    z-index: 10000;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 10px 0px
+}
+
+@media screen and (max-width: 600px) {
+    div#header {
+        position: relative;
+        width: 100%;
+        height: var(--sidebar-height);
+        bottom: auto
+    }
+}
+
+@media screen and (min-height: 500px) and (min-width: 601px) {
+    div#header #lowerHeader {
+        margin-top: 300px;
+
+    }
+}
+
+@media screen and (min-height: 800px) and (min-width: 601px) {
+    div#header #lowerHeader {
+        margin-top: 66vh;
+
+    }
+}
+
+div#header menu#menu {
+    position: absolute;
+    bottom: 10px;
+}
+
+div#header menu#menu li.MenuLi0,
+div#header menu#menu ul#MenuUlGalerie>li.MenuLi1 {
+    float: none;
+    display: block
+}
+
+div#header menu#menu ul {
+    padding: 0px 0px 0px 0px;
+    display: block
+}
+
+div#header menu#menu ul#navigation li {
+    position: relative;
+    vertical-align: middle;
+    line-height: 30px;
+    display: block
+}
+
+div#header menu#menu ul#navigation>li {
+    min-height: 30px
+}
+
+div#header menu#menu ul#navigation>li a,
+div#header menu#menu ul#navigation>li span {
+    display: block;
+    min-width: 80px;
+    min-height: 100%;
+    padding: 0px 0px 0px 12px
+}
+
+div#header menu#menu ul#navigation>li ul.submenu0 {
+    min-width: 150px
+}
+
+div#header menu#menu ul#navigation li.active a {
+    color: #f8d687
+}
+
+div#header menu#menu ul#navigation li.active a:hover {
+    color: #ffffff
+}
+
+div#header div#lowerHeader {
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: auto;
+    min-height: 30px;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 0px 12px 8px 12px;
+    box-sizing: border-box
+}
+
+div#header div#lowerHeader div#logoWrapper {
+    background: #333333;
+    z-index: 10000;
+    width: 180px;
+    padding: 5px 5px 5px 5px;
+    margin: 0 auto;
+}
+
+div#header div#lowerHeader div#logoWrapper img#logo {
+    width: 100%
+}
+
+div#header div#lowerHeader div#reihe,
+div#header div#lowerHeader label {
+    line-height: 30px;
+    margin: 0px
+}
+
+div#header div#lowerHeader label {
+    cursor: pointer
+}
+
+div#header div#lowerHeader div#reihe a.permalink {
+    font-size: 10px
+}
+
+div#header div#lowerHeader div#reihe ul {
+    padding: 0px;
+    margin: 0px
+}
+
+div#header div#lowerHeader div#reihe li {
+    display: inline-block;
+    margin-right: 5px
+}
+
+div#header div#lowerHeader .nGY2Navigationbar.ngy2-filter-in-header {
+    margin: 0;
+    padding: 6px 0;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    order: 3
+}
+
+div#header div#lowerHeader .nGY2Navigationbar.ngy2-filter-in-header .nGY2NavigationbarItem {
+    margin: 4px 4px
+}
+
+div#super {
+    position: absolute;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 20px;
+}
+
+@media screen and (min-width: 601px) {
+    div#super {
+        top: 0px;
+        left: var(--sidebar-width);
+        right: 0px;
+        bottom: 0px;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    div#super {
+        top: calc(var(--sidebar-height) + 20px);
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+    }
+}
+
+body.TextStyle div#super div#content {
+    background: #444444;
+    position: absolute;
+    top: 10px;
+    left: 210px;
+    padding: 30px 30px 30px 30px;
+    margin-bottom: 10px;
+    min-height: 200px
+}
+
+body.TextStyle div#super div#content li {
+    list-style-type: disc
+}
+
+body.TextStyle div#super div#content div.center {
+    text-align: center
+}
+
+body.TextStyle div#super div#content pre {
+    font-size: 0.9em
+}
+
+body.TextStyle div#super div#content h1 {
+    padding-bottom: 50px
+}
