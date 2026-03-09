@@ -49,10 +49,15 @@ div#header {
 }
 
 @media screen and (max-width: 600px) {
+    body {
+        flex-direction: column;
+    }
+
     div#header {
+        order: -1;
         position: relative;
         width: 100%;
-        height: var(--sidebar-height);
+        height: auto;
         bottom: auto
     }
 }
@@ -71,51 +76,58 @@ div#header {
     }
 }
 
-div#header menu#menu {
+div#header #sidebar-nav {
     position: absolute;
     bottom: 10px;
+    padding: 0 12px;
 }
 
-div#header menu#menu li.MenuLi0,
-div#header menu#menu ul#MenuUlGalerie>li.MenuLi1 {
-    float: none;
-    display: block
+div#header #sidebar-nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-div#header menu#menu ul {
-    padding: 0px 0px 0px 0px;
-    display: block
+@media screen and (max-width: 600px) {
+    div#header #sidebar-nav {
+        display: none;
+    }
 }
 
-div#header menu#menu ul#navigation li {
-    position: relative;
-    vertical-align: middle;
-    line-height: 30px;
-    display: block
+#footer-nav {
+    display: none;
 }
 
-div#header menu#menu ul#navigation>li {
-    min-height: 30px
+@media screen and (max-width: 600px) {
+    #footer-nav {
+        display: block;
+        background: #333333;
+        padding: 16px 20px;
+        text-align: center;
+    }
+
+    #footer-nav ul {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
 }
 
-div#header menu#menu ul#navigation>li a,
-div#header menu#menu ul#navigation>li span {
+#header .nGY2Navigationbar.ngy2-filter-in-header {
+    margin: 0;
+    padding: 6px 0;
     display: block;
-    min-width: 80px;
-    min-height: 100%;
-    padding: 0px 0px 0px 12px
+    width: 100%;
 }
 
-div#header menu#menu ul#navigation>li ul.submenu0 {
-    min-width: 150px
-}
-
-div#header menu#menu ul#navigation li.active a {
-    color: #f8d687
-}
-
-div#header menu#menu ul#navigation li.active a:hover {
-    color: #ffffff
+#header .nGY2Navigationbar.ngy2-filter-in-header .nGY2NavigationbarItem {
+    margin: 4px 3px;
 }
 
 div#header div#lowerHeader {
@@ -198,10 +210,11 @@ div#super {
 
 @media screen and (max-width: 600px) {
     div#super {
-        top: calc(var(--sidebar-height) + 20px);
-        left: 0px;
-        right: 0px;
-        bottom: 0px;
+        position: relative;
+        top: auto;
+        left: auto;
+        right: auto;
+        bottom: auto;
     }
 }
 
@@ -213,6 +226,15 @@ body.TextStyle div#super div#content {
     padding: 30px 30px 30px 30px;
     margin-bottom: 10px;
     min-height: 200px
+}
+
+@media screen and (max-width: 600px) {
+    body.TextStyle div#super div#content {
+        position: relative;
+        top: auto;
+        left: auto;
+        padding: 20px;
+    }
 }
 
 body.TextStyle div#super div#content li {
