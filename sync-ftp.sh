@@ -9,7 +9,7 @@ ROOT="$(pwd)"
 # Config – EDIT THESE
 #######################################
 
-REMOTE_DIR="/poc.maximilian-huber.de"
+REMOTE_DIR="/maximilian-huber.de"
 LOCAL_DIR="$ROOT/v2"
 
 PASS_ENTRY="ftp.maximilian-huber.de"

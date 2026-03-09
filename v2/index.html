@@ -47,19 +47,8 @@
         </nav>
     </div>
     <script>
-        const resolution = new URLSearchParams(window.location.search).get('resolution') || '4k';
-        let itemsBaseURL;
-        switch (resolution) {
-            case '4k':
-                itemsBaseURL = 'http://4k.maximilian-huber.de/';
-                break;
-            case '1080p':
-            case 'full':
-                throw new Error(`Resolution "${resolution}" is not yet supported`);
-            default:
-                throw new Error(`Unknown resolution: "${resolution}"`);
-        }
-        fetch('index.json?t=' + new Date().getTime())
+        let itemsBaseURL = 'https://maximilian-huber.de/_8k/';
+        fetch(itemsBaseURL + '/index.json?t=' + new Date().getTime())
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Failed to load gallery data');

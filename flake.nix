@@ -13,12 +13,22 @@
     {
       packages.${system}.sync = pkgs.writeShellScriptBin "sync-ftp" ''
         export PATH="${pkgs.lib.makeBinPath [ pkgs.lftp (pkgs.pass.withExtensions (exts: [ ])) pkgs.coreutils pkgs.gnused pkgs.gnugrep ]}:$PATH"
-        exec ${pkgs.bash}/bin/bash ${./sync-ftp.poc.sh} "$@"
+        exec ${pkgs.bash}/bin/bash ${./sync-ftp..sh} "$@"
+      '';
+
+      packages.${system}.gftp = pkgs.writeShellScriptBin "gftp" ''
+        export PATH="${pkgs.lib.makeBinPath [ pkgs.gftp (pkgs.pass.withExtensions (exts: [ ])) pkgs.coreutils pkgs.gnused pkgs.gnugrep ]}:$PATH"
+        exec ${pkgs.bash}/bin/bash ${./gftp.sh} "$@"
       '';
 
       apps.${system}.sync = {
         type = "app";
         program = "${self.packages.${system}.sync}/bin/sync-ftp";
+      };
+
+      apps.${system}.gftp = {
+        type = "app";
+        program = "${self.packages.${system}.gftp}/bin/gftp";
       };
     };
 }
